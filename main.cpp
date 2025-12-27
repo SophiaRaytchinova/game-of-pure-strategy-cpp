@@ -17,36 +17,34 @@
 #include <fstream>
 #include <cstdlib>
 #include <vector>
-//#include <string> 
+#include <string> 
 using std::cin;
 using std::cout;
 using std::endl;
 
-int cardPoints(char card) {
-    if (card >= '0' && card <= '9') {
-    	return card;
-    }
-    else if (card == 'A') {
+int cardPoints(const std::string card) {
+    if (card == "A") {
         return 1;
     }
-    else if (card == 'J') {
+    if (card == "J") {
         return 11;
     }
-    else if (card == 'Q') {
+    if (card == "Q") {
         return 12;
     }
-    else if (card == 'K') {
+    if (card == "K") {
         return 13;
     }
+    return std::stoi(card); // for cards 2-10, from string to integer->prints int
 }
 
-void mySwap(char& a, char& b) {
-    char temp = a;
+void mySwap(std::string& a, std::string& b) {
+    std::string temp = a;
     a = b;
     b = temp;
 }
 
-void shuffleDeck(std::vector<char>& deck) {
+void shuffleDeck(std::vector<std::string>& deck) {
     for (int i = 0; i < deck.size(); i++) {
         int randomIndex = rand() % deck.size();
         mySwap(deck[i], deck[randomIndex]);

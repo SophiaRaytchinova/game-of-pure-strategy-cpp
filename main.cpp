@@ -17,7 +17,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <vector>
-#include <string> 
+//#include <string> 
 using std::cin;
 using std::cout;
 using std::endl;
@@ -40,6 +40,11 @@ int cardPoints (char card) {
     }
 }
 
+void mySwap(char& a, char& b) {
+    char temp = a;
+    a = b;
+    b = temp;
+}
 
 int main() {
 

@@ -22,7 +22,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-int cardPoints (char card) {
+int cardPoints(char card) {
     if (card >= '0' && card <= '9') {
     	return card;
     }
@@ -45,6 +45,14 @@ void mySwap(char& a, char& b) {
     a = b;
     b = temp;
 }
+
+void shuffleDeck(std::vector<char>& deck) {
+    for (int i = 0; i < deck.size(); i++) {
+        int randomIndex = rand() % deck.size();
+        mySwap(deck[i], deck[randomIndex]);
+    }
+}
+
 
 int main() {
 

@@ -14,9 +14,9 @@
 */
 
 #include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <vector>
+#include <fstream> // for file operations
+#include <cstdlib> // for rand()
+#include <vector> 
 #include <string> 
 using std::cin;
 using std::cout;
@@ -51,6 +51,12 @@ void shuffleDeck(std::vector<std::string>& deck) {
     }
 }
 
+void printHand(const std::vector<std::string>& hand) {
+    for (int i = 0; i< hand.size(); i++) {
+        cout << hand[i] << " ";
+    }
+    cout << endl;
+}
 
 int main() {
 

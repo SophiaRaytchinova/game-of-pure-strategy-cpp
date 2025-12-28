@@ -45,8 +45,8 @@ void mySwap(std::string& a, std::string& b) {
 }
 
 void shuffleDeck(std::vector<std::string>& deck) {
-    for (int i = 0; i < deck.size(); i++) {
-        int randomIndex = rand() % deck.size();
+    for (int i = deck.size() - 1; i > 0; i--) { //Fisher-Yates shuffle algorithm
+        int randomIndex = rand() % (i + 1);
         mySwap(deck[i], deck[randomIndex]);
     }
 }

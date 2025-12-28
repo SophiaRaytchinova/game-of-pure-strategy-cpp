@@ -13,6 +13,8 @@
 *
 */
 
+//for now comments are only for my understanding, will clean up later
+
 #include <iostream>
 #include <fstream> // for file operations
 #include <cstdlib> // for rand() and srand()
@@ -29,7 +31,7 @@ bool registerUser(const std::string& newUsername, const std::string& newPassword
 
 // --Basic functions for cards--
 //cardPoints function returns the points of a given card as an integer
-int cardPoints(const std::string card) {
+int cardPoints(const std::string& card) {
     if (card == "A") {
         return 1;
     }
@@ -51,6 +53,7 @@ void mySwap(std::string& a, std::string& b) {
     b = temp;
 }
 //shuffleDeck function shuffles the deck of cards
+//check if you can use sth else like an array instead of vector
 void shuffleDeck(std::vector<std::string>& deck) {
     for (int i = deck.size() - 1; i > 0; i--) { //Fisher-Yates shuffle algorithm
         int randomIndex = rand() % (i + 1);
@@ -179,8 +182,80 @@ bool loginUser(const std::string& logUsername, const std::string& logPassword) {
     return false; // login failed
 }
 
+
+// go over generated main for testing and check
+
 int main() {
-    
+    srand(time(0)); // seed random number generator
+
+    int choice = 0;
+    std::string username, password;
+
+    while (true) {
+        // Main menu
+        cout << "===== CARD GAME MENU =====" << endl;
+        cout << "1. Register" << endl;
+        cout << "2. Login" << endl;
+        cout << "3. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore(); // clear newline left in buffer
+
+        if (choice == 1) {
+            // Registration
+            cout << "Enter new username: ";
+            std::getline(cin, username);
+            cout << "Enter new password: ";
+            std::getline(cin, password);
+
+            if (registerUser(username, password)) {
+                cout << "Registration successful! You can now login." << endl;
+            } else {
+                cout << "Registration failed. Try again." << endl;
+            }
+        }
+        else if (choice == 2) {
+            // Login
+            cout << "Enter username: ";
+            std::getline(cin, username);
+            cout << "Enter password: ";
+            std::getline(cin, password);
+
+            if (loginUser(username, password)) {
+                cout << "Login successful! Welcome, " << username << "!" << endl;
+
+                // ---- Simple card demo ----
+                std::vector<std::string> deck = { "A","2","3","4","5","6","7","8","9","10","J","Q","K" };
+                shuffleDeck(deck);
+
+                std::vector<std::string> hand;
+                for (int i = 0; i < 5; i++) {
+                    hand.push_back(deck[i]); // draw 5 cards
+                }
+
+                cout << "Your hand: ";
+                printHand(hand);
+
+                int totalPoints = 0;
+                for (const std::string& card : hand) {
+                    totalPoints += cardPoints(card);
+                }
+                cout << "Card points: " << totalPoints << endl;
+
+            } else {
+                cout << "Login failed. Check your username/password." << endl;
+            }
+        }
+        else if (choice == 3) {
+            cout << "Exiting program. Goodbye!" << endl;
+            break;
+        }
+        else {
+            cout << "Invalid choice. Try again." << endl;
+        }
+
+        cout << endl;
+    }
     return 0;
 }
 

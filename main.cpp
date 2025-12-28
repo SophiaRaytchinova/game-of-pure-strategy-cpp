@@ -15,7 +15,8 @@
 
 #include <iostream>
 #include <fstream> // for file operations
-#include <cstdlib> // for rand()
+#include <cstdlib> // for rand() and srand()
+//#include <ctime>   // for time()
 #include <vector>  // for dynamic arrays-hand, deck
 #include <string> 
 using std::cin;
@@ -61,6 +62,7 @@ void printHand(const std::vector<std::string>& hand) {
 }
 
 // --Functions for profiles--
+
 //userExists function checks if the user trying to log exists in the files or not
 bool userExists(const std::string& logUsername) {
     if (logUsername.empty()) {
@@ -71,7 +73,6 @@ bool userExists(const std::string& logUsername) {
         return false;
     }
     std::string username, password;
-    
     while (user >> username >> password) { //reads the file with users and passwords line by line
         if (username == logUsername) {
             user.close();
@@ -81,10 +82,11 @@ bool userExists(const std::string& logUsername) {
     user.close();
     return false; //user not found
 }
+
 //validRegisterData function checks if the username and password provided during registration are valid
 bool validRegisterData(const std::string& newUsername, const std::string& newPassword){
     if (newUsername.empty() || newPassword.empty()) {
-        cout << "Username and password cannot be empty! Enter valid username and password. " << endl;
+        cout << "Username and password cannot be empty!" << endl;
         return false;
     }
     if (newUsername.find(' ') != std::string::npos) {
@@ -97,20 +99,7 @@ bool validRegisterData(const std::string& newUsername, const std::string& newPas
     }
     return true;
 }
-//createProfileFile function creates a profile file for the new user
-bool createProfileFile(const std::string& username) {
-    std::ofstream profile(username + ".txt", std::ios::app); //creates a new file for user and their stats
-    if (!profile.is_open()) {
-        cout << "Error creating profile file for " << username << "!" << endl;
-        return false;
-    }
-    profile << "Username: " << username << endl;
-    profile << "Total games played: 0" << endl;
-    profile << "Total games won: 0 (0%)" << endl;
-    profile << "Games against other players (wins/%): " << endl;
-    profile.close();
-    return true;
-}
+
 //registerUser function registers a new user by adding their username and password to the users.txt file and creates a profile file for them
 bool registerUser(const std::string& newUsername, const std::string& newPassword) {
     if (userExists(newUsername)) {
@@ -133,6 +122,41 @@ bool registerUser(const std::string& newUsername, const std::string& newPassword
     }
     return true;
 }
+
+//createProfileFile function creates a profile file for the new user
+bool createProfileFile(const std::string& username) {
+    std::ofstream profile(username + ".txt", std::ios::app); //creates a new file for user and their stats
+    if (!profile.is_open()) {
+        cout << "Error creating profile file for " << username << "!" << endl;
+        return false;
+    }
+    profile << "Username: " << username << endl;
+    profile << "Total games played: 0" << endl;
+    profile << "Total games won: 0 (0%)" << endl;
+    profile << "Games against other players (wins/%): " << endl;
+    profile.close();
+    return true;
+}
+
+//validLoginData function checks if the username and password provided during login are valid
+bool validLoginData(const std::string& logUsername, const std::string& logPassword) {
+    if (logUsername.empty() || logPassword.empty()) {
+        cout << "Username and password cannot be empty!" << endl;
+        return false;
+    }
+    if (logUsername.find(' ') != std::string::npos) {
+        cout << "Not valid username, try wihthout spaces!" << endl;
+        return false;
+    }
+    if (logPassword.find(' ') != std::string::npos) {
+        cout << "Not valid password, try without spaces!" << endl;
+        return false;
+    }
+    return true;
+}
+
+
+
 
 int main() {
 

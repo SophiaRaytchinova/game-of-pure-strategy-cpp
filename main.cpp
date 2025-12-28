@@ -23,6 +23,10 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+bool createProfileFile(const std::string& username);
+bool registerUser(const std::string& newUsername, const std::string& newPassword);
+
+
 // --Basic functions for cards--
 //cardPoints function returns the points of a given card as an integer
 int cardPoints(const std::string card) {
@@ -155,10 +159,29 @@ bool validLoginData(const std::string& logUsername, const std::string& logPasswo
     return true;
 }
 
-
-
+bool loginUser(const std::string& logUsername, const std::string& logPassword) {
+    if (!validLoginData(logUsername, logPassword)) {
+        return false;
+    }
+    std::ifstream userFile("users.txt");
+    if (!userFile.is_open()) {
+        cout << "Error opening users.txt file!" << endl;
+        return false;
+    }
+    std::string fileUsername, filePassword;
+    while (userFile >> fileUsername >> filePassword) {
+        if (fileUsername == logUsername && filePassword == logPassword) {
+            userFile.close();
+            return true; // login successful
+        }
+    }
+    userFile.close();
+    return false; // login failed
+}
 
 int main() {
-
+    
     return 0;
 }
+
+

@@ -81,14 +81,10 @@ bool userExists(const std::string& logUsername) {
     user.close();
     return false; //user not found
 }
-
-bool registerUser(const std::string& newUsername, const std::string& newPassword) {
+//validRegisterData function checks if the username and password provided during registration are valid
+bool validRegisterData(const std::string& newUsername, const std::string& newPassword){
     if (newUsername.empty() || newPassword.empty()) {
         cout << "Username and password cannot be empty! Enter valid username and password. " << endl;
-        return false;
-    }
-    if (userExists(newUsername)) {
-        cout << "User already exists!" << endl;
         return false;
     }
     if (newUsername.find(' ') != std::string::npos) {
@@ -99,25 +95,42 @@ bool registerUser(const std::string& newUsername, const std::string& newPassword
         cout << "Password cannot contain spaces!" << endl;
         return false;
     }
+    return true;
+}
+//createProfileFile function creates a profile file for the new user
+bool createProfileFile(const std::string& username) {
+    std::ofstream profile(username + ".txt", std::ios::app); //creates a new file for user and their stats
+    if (!profile.is_open()) {
+        cout << "Error creating profile file for " << username << "!" << endl;
+        return false;
+    }
+    profile << "Username: " << username << endl;
+    profile << "Total games played: 0" << endl;
+    profile << "Total games won: 0 (0%)" << endl;
+    profile << "Games against other players (wins/%): " << endl;
+    profile.close();
+    return true;
+}
+//registerUser function registers a new user by adding their username and password to the users.txt file and creates a profile file for them
+bool registerUser(const std::string& newUsername, const std::string& newPassword) {
+    if (userExists(newUsername)) {
+        cout << "User already exists!" << endl;
+        return false;
+    }
+    if (!validRegisterData(newUsername, newPassword)) {
+        return false;
+    }
     //append new user to user.txt
     std::ofstream users("users.txt", std::ios::app); //opens file in append mode, so we can add content without removing its current content
     if (!users.is_open()) { //checks if file is open
         cout << "Error opening user.txt file!" << endl;
         return false;
     }
-    users << newUsername << " " << newPassword << endl; //writes username and password to file
+    users << newUsername << " " << newPassword << endl; //writes username and password in users.txt
     users.close();
-    //createс a profile file for the new user
-    std::ofstream profile(newUsername + ".txt", std::ios::app); //creates a new file for user statistics
-    if (!profile.is_open()) {
-        cout << "Error creating profile file!" << endl;
+    if (!createProfileFile(newUsername)) {
         return false;
     }
-    profile << "Username: " << newUsername << endl;
-    profile << "Total games played: 0" << endl;
-    profile << "Total games won: 0 (0%)" << endl;
-    profile << "Games against other players (wins/%): " << endl;
-    profile.close();
     return true;
 }
 

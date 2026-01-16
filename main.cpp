@@ -169,10 +169,11 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
         strCpy(hand2[i], deck[i + HAND_SIZE]);
     }
 
-    int score1 = 0, score2 = 0;
+    int score1 = 0, score2 = 0, accumulatedRewardPoints = 0;
 
     for (int r = 0; r < HAND_SIZE; r++) {
         cout << "\nReward card: " << deck[r + 2 * HAND_SIZE] << endl;
+        accumulatedRewardPoints += cardPoints(deck[r + 2 * HAND_SIZE]);
         char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
 
     // ----- PLAYER 1 TURN -----
@@ -207,8 +208,15 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
         int pointsOfChosenCardByP1 = cardPoints(cardChosenByP1);
         int pointsOfChosenCardByP2 = cardPoints(cardChosenByP2);
 
-        if (pointsOfChosenCardByP1 > pointsOfChosenCardByP2) { score1 += pointsOfChosenCardByP1; cout << username1 << " wins the reward!\n"; }
-        else if (pointsOfChosenCardByP2 > pointsOfChosenCardByP1) { score2 += pointsOfChosenCardByP2; cout << username2 << " wins the reward!\n"; }
+        if (pointsOfChosenCardByP1 > pointsOfChosenCardByP2) { 
+            score1 += accumulatedRewardPoints; 
+            accumulatedRewardPoints = 0;
+            cout << username1 << " wins the reward!\n"; 
+        }
+        else if (pointsOfChosenCardByP2 > pointsOfChosenCardByP1) { 
+            score2 += accumulatedRewardPoints; 
+            cout << username2 << " wins the reward!\n"; 
+        }
         else cout << "Tie! Reward card remains.\n";
 
         cout << username1 << "'s hand: "; printHand(hand1);
@@ -217,6 +225,7 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
 
     cout << "\nFinal Scores: ";
     cout << username1 << ": " << score1 << ", " << username2 << ": " << score2 << endl;
+    
     if (score1 > score2) cout << username1 << " wins!\n";
     else if (score2 > score1) cout << username2 << " wins!\n";
     else cout << "Game is a tie!\n";

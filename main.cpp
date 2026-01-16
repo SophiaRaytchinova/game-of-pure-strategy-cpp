@@ -154,7 +154,7 @@ bool validRegisterData(const char newUsername[MAX_LEN], const char newPassword[M
 }
 
 //registerUser function registers a new user by adding their username and password to the users.txt file and creates a profile file for them
-bool registerUser(const std::string& newUsername, const std::string& newPassword) {
+bool registerUser(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN]) {
     if (userExists(newUsername)) {
         cout << "User already exists!" << endl;
         return false;

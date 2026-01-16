@@ -256,6 +256,40 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
 }
 
 // --FUNCTIONS FOR PROFILES--
+bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[], int &opponentCount) {
+    char fileName[MAX_USER_PASS_LEN];
+    getProfileFileName(username, fileName);
+
+    std::ifstream file(fileName);
+    if (!file.is_open()) return false;
+
+    char line[MAX_USER_PASS_LEN];
+
+    file.getline(line, MAX_USER_PASS_LEN); // Username
+    file.getline(line, MAX_USER_PASS_LEN); // Total games played
+    sscanf(line, "Total games played: %d", &s.gamesPlayed);
+
+    file.getline(line, MAX_USER_PASS_LEN); // Total games won
+    sscanf(line, "Total games won: %d", &s.gamesWon);
+
+    file.getline(line, MAX_USER_PASS_LEN); // "Games against other players..."
+
+    opponentCount = 0;
+    while (file.getline(line, MAX_USER_PASS_LEN)) {
+        sscanf(
+            line,
+            "%[^:]: %d games played (%d",
+            opponents[opponentCount].name,
+            &opponents[opponentCount].gamesPlayed,
+            &opponents[opponentCount].gamesWon
+        );
+        opponentCount++;
+    }
+
+    file.close();
+    return true;
+}
+
 bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &s) {
     char fileName[MAX_USER_PASS_LEN];
     getProfileFileName(username, fileName);

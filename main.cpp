@@ -225,6 +225,7 @@ bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &stats) {
     return true;
 }
 
+
 bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &stats) {
     char profileFile[MAX_USER_PASS_LEN];
     getProfileFileName(username, profileFile);
@@ -241,7 +242,6 @@ bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &stats) {
     file.close();
     return true;
 }
-
 
 //userExists function checks if the user trying to log exists in the files or not
 bool userExists(const char logUsername[MAX_USER_PASS_LEN], const char logPassword[MAX_USER_PASS_LEN]) {

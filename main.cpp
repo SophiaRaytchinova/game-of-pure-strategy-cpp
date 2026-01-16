@@ -199,7 +199,7 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
         cout << username1 << "'s hand: "; printHand(hand1);
         cout << username2 << "'s hand: "; printHand(hand2);
     }
-    
+
     cout << "\nFinal Scores: ";
     cout << username1 << ": " << score1 << ", " << username2 << ": " << score2 << endl;
     if (score1 > score2) cout << username1 << " wins!\n";
@@ -393,8 +393,10 @@ int main() {
     srand(time(0)); // seed random number generator
 
     int menuChoice;
-    char username[MAX_USER_PASS_LEN];
-    char password[MAX_USER_PASS_LEN];
+    char username1[MAX_USER_PASS_LEN];
+    char password1[MAX_USER_PASS_LEN];
+    char username2[MAX_USER_PASS_LEN];
+    char password2[MAX_USER_PASS_LEN];
 
     while (true) {
         printMainMenu();
@@ -412,12 +414,12 @@ int main() {
         if (menuChoice == 1) {
             // Registration
             cout << "Enter new username: ";
-            cin.getline(username, MAX_USER_PASS_LEN);
+            cin.getline(username1, MAX_USER_PASS_LEN);
 
             cout << "Enter new password: ";
-            cin.getline(password, MAX_USER_PASS_LEN);
+            cin.getline(password1, MAX_USER_PASS_LEN);
 
-            if (registerUser(username, password)) {
+            if (registerUser(username1, password1)) {
                 cout << "Registration successful! You can now login." << endl;
             } else {
                 cout << "Registration failed. Try again." << endl;

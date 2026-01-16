@@ -26,7 +26,10 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+const int MAX_LEN = 1024;
 const int HAND_SIZE = 5;
+const int MAX_CARD_LENGTH = 3; //max length of card string (e.g., "10" + '\0')
+const int DECK_SIZE = 52;
 const int ACE_POINTS = 1;
 const int JACK_POINTS = 11;
 const int QUEEN_POINTS = 12;
@@ -99,16 +102,16 @@ int cardPoints(const char* card) {
 }
 
 //shuffleDeck function shuffles the deck of cards
-void shuffleDeck(char deck[][3], int size) {
-    for (size_t i = size - 1; i > 0; i--) { //Fisher-Yates shuffle algorithm
+void shuffleDeck(char deck[DECK_SIZE][MAX_CARD_LENGTH]) {
+    for (size_t i = DECK_SIZE - 1; i > 0; i--) { //Fisher-Yates shuffle algorithm
         int randomIndex = rand() % (i + 1);
         swapCards(deck[i], deck[randomIndex]);
     }
 }
 
 //printHand function prints the cards you have in that moment
-void printHand(const std::vector<std::string>& hand) {
-    for (size_t i = 0; i < hand.size(); i++) {
+void printHand(char hand[HAND_SIZE][MAX_CARD_LENGTH]) {
+    for (size_t i = 0; i < HAND_SIZE; i++) {
         cout << hand[i] << " ";
     }
     cout << endl;
@@ -117,21 +120,17 @@ void printHand(const std::vector<std::string>& hand) {
 // --Functions for profiles--
 
 //userExists function checks if the user trying to log exists in the files or not
-bool userExists(const std::string& logUsername) {
-    if (logUsername.empty()) {
-        return false;
-    }
+bool userExists(const char* logUsername) {
+    if (isStrEmpty(logUsername)) return false;
 
-    std::ifstream user;//("users.txt"); //opens file in read mode
-    user.open("users.txt");
+    std::ifstream user;
+    user.open("users.txt"); //opens file
+    if (!user.is_open()) return false; //checks if the file is open
 
-    if (!user.is_open()) { //checks if file is open
-        return false;
-    }
+    char username[MAX_LEN], char password[MAX_LEN];
 
-    std::string username, password;
     while (user >> username >> password) { //reads the file with users and passwords line by line
-        if (username == logUsername) {
+        if (areStrEqual(username, password)) {
             user.close();
             return true; // user found
         }

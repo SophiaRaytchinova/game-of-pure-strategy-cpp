@@ -160,7 +160,7 @@ bool registerUser(const char newUsername[MAX_LEN], const char newPassword[MAX_LE
         return false;
     }
 
-    if (!validRegisterData(newUsername, newPassword)) {
+    if (!validData(newUsername, newPassword)) {
         return false;
     }
 
@@ -211,29 +211,12 @@ bool createProfileFile(const char* username) {
     return true;
 }
 
-//validLoginData function checks if the username and password provided during login are valid
-bool validLoginData(const std::string& logUsername, const std::string& logPassword) {
-    if (logUsername.empty() || logPassword.empty()) {
-        cout << "Username and password cannot be empty!" << endl;
-        return false;
-    }
-    if (logUsername.find(' ') != std::string::npos) {
-        cout << "Not valid username, try wihthout spaces!" << endl;
-        return false;
-    }
-    if (logPassword.find(' ') != std::string::npos) {
-        cout << "Not valid password, try without spaces!" << endl;
-        return false;
-    }
-    return true;
-}
-
-bool loginUser(const std::string& logUsername, const std::string& logPassword) {
-    if (!validLoginData(logUsername, logPassword)) {
+bool loginUser(const char logUsername[MAX_LEN], const char logPassword[MAX_LEN]) {
+    if (!validData(logUsername, logPassword)) {
         return false;
     }
 
-    std::ifstream userFile;//("users.txt");
+    std::ifstream userFile;
     userFile.open("users.txt");
 
     if (!userFile.is_open()) {
@@ -241,9 +224,9 @@ bool loginUser(const std::string& logUsername, const std::string& logPassword) {
         return false;
     }
 
-    std::string fileUsername, filePassword;
+    char fileUsername[MAX_LEN], filePassword[MAX_LEN];
     while (userFile >> fileUsername >> filePassword) {
-        if (fileUsername == logUsername && filePassword == logPassword) {
+        if (areStrEqual(fileUsername, logUsername) && areStrEqual(filePassword, logPassword)) {
             userFile.close();
             return true; // login successful
         }

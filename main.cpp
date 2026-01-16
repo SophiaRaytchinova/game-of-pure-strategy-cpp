@@ -266,23 +266,25 @@ bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassw
     return createProfileFile(newUsername);
 }
 
-//createProfileFile function creates a profile file for the new user
-bool createProfileFile(const char username[MAX_USER_PASS_LEN]) {
-    char fileName[MAX_USER_PASS_LEN];
+void getProfileFileName(const char username[MAX_USER_PASS_LEN], char fileName[MAX_USER_PASS_LEN]) {
+    strCpy(fileName, username);
     int i = 0;
 
-    while (username[i] != '\0') {
-        fileName[i] = username[i];
-        i++;
-    }
+    while (fileName[i] != '\0') i++;
     fileName[i++] = '.';
     fileName[i++] = 't';
     fileName[i++] = 'x';
     fileName[i++] = 't';
     fileName[i] = '\0';
+}
+
+//createProfileFile function creates a profile file for the new user
+bool createProfileFile(const char username[MAX_USER_PASS_LEN]) {
+    char profileFile[MAX_USER_PASS_LEN];
+    getProfileFileName(username, profileFile);
 
     std::ofstream profile;
-    profile.open(fileName);
+    profile.open(profileFile);
 
     if (!profile.is_open()) {
         cout << "Error creating profile file for " << username << "!" << endl;

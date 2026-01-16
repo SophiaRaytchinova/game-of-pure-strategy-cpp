@@ -58,6 +58,7 @@ bool isStrEmpty(const char* s) {
     return s[0] == '\0';
 }
 
+// --Functions for cards--
 void swapCards(char* a, char* b) {
     char temp[3];
     int i = 0;
@@ -83,7 +84,6 @@ void swapCards(char* a, char* b) {
     b[i] = '\0';
 }
 
-// --Basic functions for cards--
 //cardPoints function returns the points of a given card as an integer
 int cardPoints(const char* card) {
     if (areStrEqual(card, "A")) return ACE_POINTS;
@@ -92,19 +92,17 @@ int cardPoints(const char* card) {
     if (areStrEqual(card, "K")) return KING_POINTS;
 
     int value = 0;
-    for (int i=0; card[i]!='\0'; i++) {
-        value = value*10+(card[i]-'0');
+    for (int i = 0; card[i] != '\0'; i++) {
+        value = value * 10 + (card[i] - '0');
     }
     return value;
 }
 
-
 //shuffleDeck function shuffles the deck of cards
-//check if you can use sth else like an array instead of vector
-void shuffleDeck(std::vector<std::string>& deck) {
-    for (size_t i = deck.size() - 1; i > 0; i--) { //Fisher-Yates shuffle algorithm
+void shuffleDeck(char deck[][3], int size) {
+    for (size_t i = size - 1; i > 0; i--) { //Fisher-Yates shuffle algorithm
         int randomIndex = rand() % (i + 1);
-        mySwap(deck[i], deck[randomIndex]);
+        swapCards(deck[i], deck[randomIndex]);
     }
 }
 

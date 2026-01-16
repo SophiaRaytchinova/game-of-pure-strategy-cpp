@@ -426,46 +426,29 @@ int main() {
             }
         }
         else if (menuChoice == 2) {
-            // Login
-            cout << "Enter username: ";
-            cin.getline(username, MAX_USER_PASS_LEN);
+            // Login player1
+            cout << "Player 1 -> Enter username: ";
+            cin.getline(username1, MAX_USER_PASS_LEN);
 
-            cout << "Enter password: ";
-            cin.getline(password, MAX_USER_PASS_LEN);
+            cout << "Player 1 -> Enter password: ";
+            cin.getline(password1, MAX_USER_PASS_LEN);
 
-            if (loginUser(username, password)) {
-                cout << "Login successful! Welcome, " << username << "!" << endl;
-
-                char deck[DECK_SIZE][MAX_CARD_LENGTH] = { 
-                    "A", "2", "3", "4", "5", "6", "7", 
-                    "8", "9", "10", "J", "Q", "K"
-                };
-
-                shuffleDeck(deck);
-
-                char hand[HAND_SIZE][MAX_CARD_LENGTH];
-                for (int i = 0; i < HAND_SIZE; i++) {
-                    int j = 0;
-                    while (deck[i][j] != '\0') {
-                        hand[i][j] = deck [i][j];
-                        j++;
-                    }
-                    hand[i][j] = '\0';
-                }
-
-                cout << "Your hand: ";
-                printHand(hand);
-
-                int totalPoints = 0;
-                for (int i = 0; i < HAND_SIZE; i++) {
-                    totalPoints += cardPoints(hand[i]);
-                }
-
-                cout << "Card points: " << totalPoints << endl;
+            if (!loginUser(username1, password1)) {
+                cout << "Login failed for player1. Check username/password. " << endl;
+                continue;
             } 
-            else {
-                cout << "Login failed. Check your username/password. Might not exist a user with this name, register first." << endl;
-            }
+            cout << "Player 2 -> Enter username: ";
+            cin.getline(username2, MAX_USER_PASS_LEN);
+
+            cout << "Player 2 -> Enter password: ";
+            cin.getline(password2, MAX_USER_PASS_LEN);
+
+            if (!loginUser(username2, password2)) {
+                cout << "Login failed for player2. Check username/password. " << endl;
+                continue;
+            } 
+
+            cout << "Both players logged in successfully! Starting game! " << endl;
         }
         else if (menuChoice == 3) {
             cout << "Exiting program. Goodbye!" << endl;

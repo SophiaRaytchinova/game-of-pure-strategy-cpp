@@ -24,9 +24,11 @@ using std::endl;
 
 const int MAX_OPPONENTS = 20;
 const int MAX_USER_PASS_LEN = 1024;
-const int HAND_SIZE = 5;
-const int MAX_CARD_LENGTH = 4; //max length of card string (e.g., "10" + '\0')
 const int DECK_SIZE = 13; //number of different cards in the deck
+const int HAND_SIZE = DECK_SIZE;
+const int MAX_CARD_LENGTH = 4; //max length of card string (e.g., "10" + '\0')
+
+
 const int ACE_POINTS = 1;
 const int JACK_POINTS = 11;
 const int QUEEN_POINTS = 12;
@@ -43,6 +45,15 @@ struct OpponentStats {
     int gamesWon;
 };
 
+bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
+//bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &s);
+//bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &s);
+void getProfileFileName(const char username[MAX_USER_PASS_LEN], char fileName[MAX_USER_PASS_LEN]);
+//bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]);
+bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[], int &opponentCount);
+bool saveFullProfile(const char username[], const Stats &s, OpponentStats opponents[], int opponentCount);
+void updateOpponent(OpponentStats opponents[], int &count, const char opponentName[], bool won);
+
 void waitAndClearScreen() {
     cout << "\nPress ENTER to continue...";
     cin.ignore(MAX_USER_PASS_LEN, '\n');
@@ -52,12 +63,7 @@ void waitAndClearScreen() {
     }
 }
 
-bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
-bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &s);
-bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &s);
-void getProfileFileName(const char username[MAX_USER_PASS_LEN], char fileName[MAX_USER_PASS_LEN]);
-//bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]);
-
+// --FUNCTIONS FOR CHAR ARRAY--
 void strCpy(char* dest, const char* src) {
     int i = 0;
     while (src[i] != '\0') { 
@@ -167,20 +173,21 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
         "A", "2", "3", "4", "5", "6", "7", 
         "8", "9", "10", "J", "Q", "K"
     };
-    shuffleDeck(deck);
 
     char hand1[HAND_SIZE][MAX_CARD_LENGTH];
     char hand2[HAND_SIZE][MAX_CARD_LENGTH];
     for (int i = 0; i < HAND_SIZE; i++) {
         strCpy(hand1[i], deck[i]);
-        strCpy(hand2[i], deck[i + HAND_SIZE]);
+        strCpy(hand2[i], deck[i]);
     }
+    shuffleDeck(deck);
 
     int score1 = 0, score2 = 0, accumulatedRewardPoints = 0;
-
+    // reward card is deck[r]
     for (int r = 0; r < HAND_SIZE; r++) {
-        cout << "\nReward card: " << deck[r + 2 * HAND_SIZE] << endl;
-        accumulatedRewardPoints += cardPoints(deck[r + 2 * HAND_SIZE]);
+        waitAndClearScreen();
+        cout << "\nReward card: " << deck[r] << endl;
+        accumulatedRewardPoints += cardPoints(deck[r]);
         char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
 
     // ----- PLAYER 1 TURN -----

@@ -44,6 +44,17 @@ bool strCmp(const char* a, const char* b) {
     return true;
 }
 
+void strCpy(char* dest, const char* src) {
+    int i = 0;
+    while (src[i] != '\0') { 
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0'; 
+}
+
+
+
 bool areStrEqual(const char *a, const char* b) {
     int i = 0;
 
@@ -119,6 +130,23 @@ void printHand(char hand[HAND_SIZE][MAX_CARD_LENGTH]) {
         cout << hand[i] << " ";
     }
     cout << endl;
+}
+
+bool removeCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
+    // find the card in hand and remove it
+    for (int i = 0; i < HAND_SIZE; i++) {
+        if (strcmp(hand[i], card) == 0) {
+            strcpy(hand[i], ""); // mark as used
+            return true;
+        }
+    }
+    return false; // card not found
+}
+
+bool isValidCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
+    for (int i = 0; i < HAND_SIZE; i++)
+        if (strcmp(hand[i], card) == 0) return true;
+    return false;
 }
 
 // --Functions for profiles--

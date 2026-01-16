@@ -290,6 +290,22 @@ bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[],
     return true;
 }
 
+void updateOpponent(OpponentStats opponents[], int &count, const char opponentName[], bool won) {
+    for (int i = 0; i < count; i++) {
+        if (areStrEqual(opponents[i].name, opponentName)) {
+            opponents[i].gamesPlayed++;
+            if (won) opponents[i].gamesWon++;
+            return;
+        }
+    }
+
+    strCpy(opponents[count].name, opponentName);
+    opponents[count].gamesPlayed = 1;
+    opponents[count].gamesWon = won ? 1 : 0;
+    count++;
+}
+
+
 bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &s) {
     char fileName[MAX_USER_PASS_LEN];
     getProfileFileName(username, fileName);

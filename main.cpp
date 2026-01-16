@@ -216,7 +216,7 @@ bool loginUser(const char logUsername[MAX_LEN], const char logPassword[MAX_LEN])
     userFile.open("users.txt");
 
     if (!userFile.is_open()) {
-        cout << "Error opening users.txt file!" << endl;
+        //cout << "Error opening users.txt file! File might not exist." << endl;
         return false;
     }
 
@@ -314,7 +314,7 @@ int main() {
                 cout << "Card points: " << totalPoints << endl;
             } 
             else {
-                cout << "Login failed. Check your username/password." << endl;
+                cout << "Login failed. Check your username/password. Might not exist a user with this name, register first." << endl;
             }
         }
         else if (menuChoice == 3) {

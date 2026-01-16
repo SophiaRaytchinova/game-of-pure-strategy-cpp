@@ -236,14 +236,12 @@ bool loginUser(const char logUsername[MAX_LEN], const char logPassword[MAX_LEN])
     return false; // login failed
 }
 
-
-// go over generated main for testing and check
-
 int main() {
     srand(time(0)); // seed random number generator
 
     int menuChoice;
-    std::string username, password;
+    char username[MAX_LEN];
+    char password[MAX_LEN];
 
     while (true) {
         // Main menu
@@ -259,10 +257,10 @@ int main() {
         if (menuChoice == 1) {
             // Registration
             cout << "Enter new username: ";
-            std::getline(cin, username);
+            cin.getline(username, MAX_LEN);
 
             cout << "Enter new password: ";
-            std::getline(cin, password);
+            cin.getline(password, MAX_LEN);
 
             if (registerUser(username, password)) {
                 cout << "Registration successful! You can now login." << endl;
@@ -273,34 +271,36 @@ int main() {
         else if (menuChoice == 2) {
             // Login
             cout << "Enter username: ";
-            std::getline(cin, username);
+            cin.getline(username, MAX_LEN);
 
             cout << "Enter password: ";
-            std::getline(cin, password);
+            cin.getline(password, MAX_LEN);
 
             if (loginUser(username, password)) {
                 cout << "Login successful! Welcome, " << username << "!" << endl;
 
-                // ---- Simple card demo ----
-                std::vector<std::string> deck = { "A","2","3","4","5","6","7","8","9","10","J","Q","K" };
-                
+                char deck[13][3] = { "A", "2", "3", "4", "5", "6", "7", 
+                "8", "9", "10", "J", "Q", "K"
+                };
+
                 shuffleDeck(deck);
 
-                std::vector<std::string> hand;
+                char hand[HAND_SIZE][3];
                 for (int i = 0; i < HAND_SIZE; i++) {
-                    hand.push_back(deck[i]); // draw 5 cards
+                    swapCards(hand[i], deck[i]); 
                 }
 
                 cout << "Your hand: ";
                 printHand(hand);
 
                 int totalPoints = 0;
-                for (const std::string& card : hand) {
-                    totalPoints += cardPoints(card);
+                for (int i = 0; i < HAND_SIZE; i++) {
+                    totalPoints += cardPoints(hand[i]);
                 }
-                cout << "Card points: " << totalPoints << endl;
 
-            } else {
+                cout << "Card points: " << totalPoints << endl;
+            } 
+            else {
                 cout << "Login failed. Check your username/password." << endl;
             }
         }

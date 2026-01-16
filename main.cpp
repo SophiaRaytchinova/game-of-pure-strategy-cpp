@@ -18,7 +18,7 @@
 #include <iostream>
 #include <fstream> // for file operations
 #include <cstdlib> // for rand() and srand()
-//#include <ctime>   // for time() питай дали може да се ползва
+#include <ctime>   // for time()
 #include <vector>  // for dynamic arrays-hand, deck
 #include <string> 
 
@@ -36,23 +36,68 @@ bool createProfileFile(const std::string& username);
 bool registerUser(const std::string& newUsername, const std::string& newPassword);
 
 
+
+
+bool areStrEqual(const char *a, const char* b) {
+    int i = 0;
+    while (a[i] != '\0' && b[i]!='\0') {
+        if (a[i] != b[i]) return false;
+        else return true;
+    }
+    return a[i]==b[i];
+}
+
+bool containsSpace(const char* s) {
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] == ' ') return true;
+    }
+    return false;
+}
+
+bool isStrEmpty(const char* s) {
+    return s[0] == '\0';
+}
+
+void swapCards(char* a, char* b) {
+    char temp[3];
+    int i = 0;
+
+    while (a[i] != '\0') {
+        temp[i] = a[i];
+        i++;
+    }
+    temp[i] = '\0';
+
+    i = 0; 
+    while (b[i] != '\0') {
+        a[i] = b[i];
+        i++;
+    }
+    a[i] = '\0';
+
+    i = 0; 
+    while (temp[i] != '\0') {
+        b[i] = temp[i];
+        i++;
+    }
+    b[i] = '\0';
+}
+
 // --Basic functions for cards--
-
 //cardPoints function returns the points of a given card as an integer
-int cardPoints(const std::string& card) {
-    if (card == "A") return ACE_POINTS;
-    if (card == "J") return JACK_POINTS;
-    if (card == "Q") return QUEEN_POINTS;
-    if (card == "K") return KING_POINTS;
-    return std::stoi(card);
+int cardPoints(const char* card) {
+    if (areStrEqual(card, "A")) return ACE_POINTS;
+    if (areStrEqual(card, "J")) return JACK_POINTS;
+    if (areStrEqual(card, "Q")) return QUEEN_POINTS;
+    if (areStrEqual(card, "K")) return KING_POINTS;
+
+    int value = 0;
+    for (int i=0; card[i]!='\0'; i++) {
+        value = value*10+(card[i]-'0');
+    }
+    return value;
 }
 
-// Swaps two strings without using std::swap
-void mySwap(std::string& first, std::string& second) {
-    std::string temp = first;
-    first = second;
-    second = temp;
-}
 
 //shuffleDeck function shuffles the deck of cards
 //check if you can use sth else like an array instead of vector

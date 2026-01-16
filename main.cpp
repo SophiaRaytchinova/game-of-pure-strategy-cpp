@@ -34,7 +34,7 @@ const int KING_POINTS = 13;
 struct Stats {
     int gamesPlayed;
     int gamesWon;
-}
+};
 
 bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
 //bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]);

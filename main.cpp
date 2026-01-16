@@ -371,6 +371,12 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
     return false; // login failed
 }
 
+void waitForEnter() {
+    cout << "Press ENTER to continue...";
+    cin.ignore(MAX_USER_PASS_LEN, '\n');
+}
+
+
 void printMainMenu() {
     cout << "===== CARD GAME MENU =====" << endl;
     cout << "1. Register" << endl;
@@ -439,6 +445,8 @@ int main() {
             } 
 
             cout << "Both players logged in successfully! Starting game! " << endl;
+            
+            waitForEnter();
             playGame(username1, username2);
         }
         else if (menuChoice == 3) {

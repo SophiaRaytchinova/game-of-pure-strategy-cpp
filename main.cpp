@@ -240,19 +240,24 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
     bool player1Won = (score1 > score2);
     bool player2Won = (score2 > score1);
 
-    Stats s1 = {0,0}, s2 = {0,0};
-    loadStats(username1, s1);
-    loadStats(username2, s2);
+    Stats s1 = {0, 0}, s2 = {0, 0};
+    OpponentStats opp1[MAX_OPPONENTS], opp2[MAX_OPPONENTS];
+    int oppCount1 = 0, oppCount2 = 0;
+
+    loadFullProfile(username1, s1, opp1, oppCount1);
+    loadFullProfile(username2, s2, opp2, oppCount2);
 
     s1.gamesPlayed++;
     s2.gamesPlayed++;
 
-    if(player1Won) s1.gamesWon++;
-    if(player2Won) s2.gamesWon++;
+    if (player1Won) s1.gamesWon++;
+    if (player2Won) s2.gamesWon++;
 
-    saveStats(username1, s1);
-    saveStats(username2, s2);
+    updateOpponent(opp1, oppCount1, username2, player1Won);
+    updateOpponent(opp2, oppCount2, username1, player2Won);
 
+    saveFullProfile(username1, s1, opp1, oppCount1);
+    saveFullProfile(username2, s2, opp2, oppCount2);
 }
 
 // --FUNCTIONS FOR PROFILES--

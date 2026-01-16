@@ -34,6 +34,16 @@ const int KING_POINTS = 13;
 bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
 //bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]);
 
+bool strCmp(const char* a, const char* b) {
+    int i = 0;
+
+    while (a[i] != '\0' && b[i]!='\0') {
+        if (a[i] != b[i]) return false;
+        i++;
+    }
+    return true;
+}
+
 bool areStrEqual(const char *a, const char* b) {
     int i = 0;
 
@@ -231,22 +241,6 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
     userFile.close();
     return false; // login failed
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

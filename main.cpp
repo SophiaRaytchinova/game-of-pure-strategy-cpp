@@ -22,6 +22,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+const int MAX_OPPONENTS = 20;
 const int MAX_USER_PASS_LEN = 1024;
 const int HAND_SIZE = 5;
 const int MAX_CARD_LENGTH = 4; //max length of card string (e.g., "10" + '\0')
@@ -32,6 +33,12 @@ const int QUEEN_POINTS = 12;
 const int KING_POINTS = 13;
 
 struct Stats {
+    int gamesPlayed;
+    int gamesWon;
+};
+
+struct OpponentStats {
+    char name[MAX_USER_PASS_LEN];
     int gamesPlayed;
     int gamesWon;
 };

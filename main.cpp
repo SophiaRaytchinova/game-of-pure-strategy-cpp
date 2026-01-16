@@ -22,7 +22,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-const int MAX_LEN = 1024;
+const int MAX_USER_PASS_LEN = 1024;
 const int HAND_SIZE = 5;
 const int MAX_CARD_LENGTH = 4; //max length of card string (e.g., "10" + '\0')
 const int DECK_SIZE = 13; //number of different cards in the deck
@@ -31,8 +31,8 @@ const int JACK_POINTS = 11;
 const int QUEEN_POINTS = 12;
 const int KING_POINTS = 13;
 
-bool createProfileFile(const char username [MAX_LEN]);
-bool registerUser(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN]);
+bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
+//bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]);
 
 bool areStrEqual(const char *a, const char* b) {
     int i = 0;
@@ -114,14 +114,14 @@ void printHand(char hand[HAND_SIZE][MAX_CARD_LENGTH]) {
 // --Functions for profiles--
 
 //userExists function checks if the user trying to log exists in the files or not
-bool userExists(const char logUsername[MAX_LEN], const char logPassword[MAX_LEN]) {
+bool userExists(const char logUsername[MAX_USER_PASS_LEN], const char logPassword[MAX_USER_PASS_LEN]) {
     if (isStrEmpty(logUsername)) return false;
 
     std::ifstream user;
     user.open("users.txt"); //opens file
     if (!user.is_open()) return false; //checks if the file is open
 
-    char username[MAX_LEN], password[MAX_LEN];
+    char username[MAX_USER_PASS_LEN], password[MAX_USER_PASS_LEN];
 
     while (user >> username >> password) { //reads the file with users and passwords line by line
         if (areStrEqual(username, logUsername)) {
@@ -137,7 +137,7 @@ bool userExists(const char logUsername[MAX_LEN], const char logPassword[MAX_LEN]
 }
 
 //validRegisterData function checks if the username and password provided during registration are valid
-bool validData(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN]){
+bool validData(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]){
     if (isStrEmpty(newUsername) || isStrEmpty(newPassword)) {
         cout << "Username and password cannot be empty!" << endl;
         return false;
@@ -150,7 +150,7 @@ bool validData(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN])
 }
 
 //registerUser function registers a new user by adding their username and password to the users.txt file and creates a profile file for them
-bool registerUser(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN]) {
+bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]) {
     if (userExists(newUsername, newPassword)) {
         cout << "User already exists!" << endl;
         return false;
@@ -176,8 +176,8 @@ bool registerUser(const char newUsername[MAX_LEN], const char newPassword[MAX_LE
 }
 
 //createProfileFile function creates a profile file for the new user
-bool createProfileFile(const char username[MAX_LEN]) {
-    char fileName[MAX_LEN];
+bool createProfileFile(const char username[MAX_USER_PASS_LEN]) {
+    char fileName[MAX_USER_PASS_LEN];
     int i = 0;
 
     while (username[i] != '\0') {
@@ -207,7 +207,7 @@ bool createProfileFile(const char username[MAX_LEN]) {
     return true;
 }
 
-bool loginUser(const char logUsername[MAX_LEN], const char logPassword[MAX_LEN]) {
+bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword[MAX_USER_PASS_LEN]) {
     if (!validData(logUsername, logPassword)) {
         return false;
     }
@@ -220,7 +220,7 @@ bool loginUser(const char logUsername[MAX_LEN], const char logPassword[MAX_LEN])
         return false;
     }
 
-    char fileUsername[MAX_LEN], filePassword[MAX_LEN];
+    char fileUsername[MAX_USER_PASS_LEN], filePassword[MAX_USER_PASS_LEN];
     while (userFile >> fileUsername >> filePassword) {
         if (areStrEqual(fileUsername, logUsername) && areStrEqual(filePassword, logPassword)) {
             userFile.close();
@@ -231,6 +231,29 @@ bool loginUser(const char logUsername[MAX_LEN], const char logPassword[MAX_LEN])
     userFile.close();
     return false; // login failed
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void printMainMenu() {
     cout << "===== CARD GAME MENU =====" << endl;
@@ -244,8 +267,8 @@ int main() {
     srand(time(0)); // seed random number generator
 
     int menuChoice;
-    char username[MAX_LEN];
-    char password[MAX_LEN];
+    char username[MAX_USER_PASS_LEN];
+    char password[MAX_USER_PASS_LEN];
 
     while (true) {
         // Main menu
@@ -254,7 +277,7 @@ int main() {
         cin >> menuChoice;
         if (cin.fail()) {
             cin.clear();
-            cin.ignore(MAX_LEN, '\n');
+            cin.ignore(MAX_USER_PASS_LEN, '\n');
             cout << "Invalid choice. Try again." << endl;
             cout << endl;
             continue;
@@ -264,10 +287,10 @@ int main() {
         if (menuChoice == 1) {
             // Registration
             cout << "Enter new username: ";
-            cin.getline(username, MAX_LEN);
+            cin.getline(username, MAX_USER_PASS_LEN);
 
             cout << "Enter new password: ";
-            cin.getline(password, MAX_LEN);
+            cin.getline(password, MAX_USER_PASS_LEN);
 
             if (registerUser(username, password)) {
                 cout << "Registration successful! You can now login." << endl;
@@ -278,10 +301,10 @@ int main() {
         else if (menuChoice == 2) {
             // Login
             cout << "Enter username: ";
-            cin.getline(username, MAX_LEN);
+            cin.getline(username, MAX_USER_PASS_LEN);
 
             cout << "Enter password: ";
-            cin.getline(password, MAX_LEN);
+            cin.getline(password, MAX_USER_PASS_LEN);
 
             if (loginUser(username, password)) {
                 cout << "Login successful! Welcome, " << username << "!" << endl;

@@ -35,7 +35,8 @@ bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
 //bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]);
 
 
-
+// --FUNCTIONS FOR STR-- 
+// (char arrays)
 bool strCmp(const char* a, const char* b) {
     int i = 0;
 
@@ -76,7 +77,7 @@ bool isStrEmpty(const char* s) {
     return s[0] == '\0';
 }
 
-// --Functions for cards--
+// --FUNCTIONS FOR CARDS--
 void swapCards(char* a, char* b) {
     char temp[MAX_CARD_LENGTH];
     int i = 0;
@@ -104,7 +105,7 @@ void swapCards(char* a, char* b) {
 
 
 //cardPoints function returns the points of a given card as an integer
-int cardPoints(const char* card) {
+int cardPoints(const char card[MAX_CARD_LENGTH]) {
     if (areStrEqual(card, "A")) return ACE_POINTS;
     if (areStrEqual(card, "J")) return JACK_POINTS;
     if (areStrEqual(card, "Q")) return QUEEN_POINTS;
@@ -149,8 +150,10 @@ bool isValidCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
         if (strCmp(hand[i], card) == 0) return true;
     return false;
 }
+// --FUNCTIONS FOR GAMEPLAY--
 
-// --Functions for profiles--
+
+// --FUNCTIONS FOR PROFILES--
 
 //userExists function checks if the user trying to log exists in the files or not
 bool userExists(const char logUsername[MAX_USER_PASS_LEN], const char logPassword[MAX_USER_PASS_LEN]) {

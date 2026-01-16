@@ -14,40 +14,34 @@
 */
 
 //for now comments are only for my understanding, will clean up later
-
 #include <iostream>
 #include <fstream> // for file operations
 #include <cstdlib> // for rand() and srand()
 #include <ctime>   // for time()
-#include <vector>  // for dynamic arrays-hand, deck
-#include <string> 
-
 using std::cin;
 using std::cout;
 using std::endl;
 
 const int MAX_LEN = 1024;
 const int HAND_SIZE = 5;
-const int MAX_CARD_LENGTH = 3; //max length of card string (e.g., "10" + '\0')
-const int DECK_SIZE = 52;
+const int MAX_CARD_LENGTH = 4; //max length of card string (e.g., "10" + '\0')
+const int DECK_SIZE = 13; //number of different cards in the deck
 const int ACE_POINTS = 1;
 const int JACK_POINTS = 11;
 const int QUEEN_POINTS = 12;
 const int KING_POINTS = 13;
 
-bool createProfileFile(const std::string& username);
-bool registerUser(const std::string& newUsername, const std::string& newPassword);
-
-
-
+bool createProfileFile(const char username [MAX_LEN]);
+bool registerUser(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN]);
 
 bool areStrEqual(const char *a, const char* b) {
     int i = 0;
+
     while (a[i] != '\0' && b[i]!='\0') {
         if (a[i] != b[i]) return false;
-        else return true;
+        i++;
     }
-    return a[i]==b[i];
+    return a[i]=='\0' && b[i]=='\0';
 }
 
 bool containsSpace(const char* s) {
@@ -63,7 +57,7 @@ bool isStrEmpty(const char* s) {
 
 // --Functions for cards--
 void swapCards(char* a, char* b) {
-    char temp[3];
+    char temp[MAX_CARD_LENGTH];
     int i = 0;
 
     while (a[i] != '\0') {
@@ -120,19 +114,21 @@ void printHand(char hand[HAND_SIZE][MAX_CARD_LENGTH]) {
 // --Functions for profiles--
 
 //userExists function checks if the user trying to log exists in the files or not
-bool userExists(const char* logUsername) {
+bool userExists(const char logUsername[MAX_LEN], const char logPassword[MAX_LEN]) {
     if (isStrEmpty(logUsername)) return false;
 
     std::ifstream user;
     user.open("users.txt"); //opens file
     if (!user.is_open()) return false; //checks if the file is open
 
-    char username[MAX_LEN], char password[MAX_LEN];
+    char username[MAX_LEN], password[MAX_LEN];
 
     while (user >> username >> password) { //reads the file with users and passwords line by line
-        if (areStrEqual(username, password)) {
+        if (areStrEqual(username, logUsername)) {
+            if (areStrEqual(password, logPassword)) {   
             user.close();
             return true; // user found
+            }
         }
     }
 
@@ -155,7 +151,7 @@ bool validData(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN])
 
 //registerUser function registers a new user by adding their username and password to the users.txt file and creates a profile file for them
 bool registerUser(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN]) {
-    if (userExists(newUsername)) {
+    if (userExists(newUsername, newPassword)) {
         cout << "User already exists!" << endl;
         return false;
     }
@@ -180,7 +176,7 @@ bool registerUser(const char newUsername[MAX_LEN], const char newPassword[MAX_LE
 }
 
 //createProfileFile function creates a profile file for the new user
-bool createProfileFile(const char* username) {
+bool createProfileFile(const char username[MAX_LEN]) {
     char fileName[MAX_LEN];
     int i = 0;
 
@@ -236,6 +232,14 @@ bool loginUser(const char logUsername[MAX_LEN], const char logPassword[MAX_LEN])
     return false; // login failed
 }
 
+void printMainMenu() {
+    cout << "===== CARD GAME MENU =====" << endl;
+    cout << "1. Register" << endl;
+    cout << "2. Login" << endl;
+    cout << "3. Exit" << endl;
+    cout << "Enter your choice: ";
+}
+
 int main() {
     srand(time(0)); // seed random number generator
 
@@ -245,13 +249,16 @@ int main() {
 
     while (true) {
         // Main menu
-        cout << "===== CARD GAME MENU =====" << endl;
-        cout << "1. Register" << endl;
-        cout << "2. Login" << endl;
-        cout << "3. Exit" << endl;
-        cout << "Enter your menuChoice: ";
+        printMainMenu();
 
         cin >> menuChoice;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(MAX_LEN, '\n');
+            cout << "Invalid choice. Try again." << endl;
+            cout << endl;
+            continue;
+        }
         cin.ignore(); // clear newline left in buffer
 
         if (menuChoice == 1) {
@@ -279,15 +286,21 @@ int main() {
             if (loginUser(username, password)) {
                 cout << "Login successful! Welcome, " << username << "!" << endl;
 
-                char deck[13][3] = { "A", "2", "3", "4", "5", "6", "7", 
-                "8", "9", "10", "J", "Q", "K"
+                char deck[13][MAX_CARD_LENGTH] = { 
+                    "A", "2", "3", "4", "5", "6", "7", 
+                    "8", "9", "10", "J", "Q", "K"
                 };
 
                 shuffleDeck(deck);
 
-                char hand[HAND_SIZE][3];
+                char hand[HAND_SIZE][MAX_CARD_LENGTH];
                 for (int i = 0; i < HAND_SIZE; i++) {
-                    swapCards(hand[i], deck[i]); 
+                    int j = 0;
+                    while (deck[i][j] != '\0') {
+                        hand[i][j] = deck [i][j];
+                        j++;
+                    }
+                    hand[i][j] = '\0';
                 }
 
                 cout << "Your hand: ";

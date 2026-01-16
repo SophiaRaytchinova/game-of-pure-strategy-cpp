@@ -141,7 +141,7 @@ bool userExists(const char* logUsername) {
 }
 
 //validRegisterData function checks if the username and password provided during registration are valid
-bool validRegisterData(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN]){
+bool validData(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN]){
     if (isStrEmpty(newUsername) || isStrEmpty(newPassword)) {
         cout << "Username and password cannot be empty!" << endl;
         return false;

@@ -37,20 +37,10 @@ struct Stats {
 };
 
 bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
+bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &s);
+bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &s);
+void getProfileFileName(const char username[MAX_USER_PASS_LEN], char fileName[MAX_USER_PASS_LEN]);
 //bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]);
-
-
-// --FUNCTIONS FOR STR-- 
-// (char arrays)
-bool strCmp(const char* a, const char* b) {
-    int i = 0;
-
-    while (a[i] != '\0' && b[i]!='\0') {
-        if (a[i] != b[i]) return false;
-        i++;
-    }
-    return true;
-}
 
 void strCpy(char* dest, const char* src) {
     int i = 0;
@@ -141,7 +131,7 @@ void printHand(char hand[HAND_SIZE][MAX_CARD_LENGTH]) {
 bool removeCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
     // find the card in hand and remove it
     for (int i = 0; i < HAND_SIZE; i++) {
-        if (strCmp(hand[i], card) == 0) {
+        if (areStrEqual(hand[i], card)) {
             strCpy(hand[i], ""); // mark as used
             return true;
         }
@@ -151,7 +141,7 @@ bool removeCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
 
 bool isValidCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
     for (int i = 0; i < HAND_SIZE; i++)
-        if (strCmp(hand[i], card) == 0) return true;
+        if (areStrEqual(hand[i], card)) return true;
     return false;
 }
 
@@ -166,8 +156,8 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
     char hand1[HAND_SIZE][MAX_CARD_LENGTH];
     char hand2[HAND_SIZE][MAX_CARD_LENGTH];
     for (int i = 0; i < HAND_SIZE; i++) {
-        strcpy(hand1[i], deck[i]);
-        strcpy(hand2[i], deck[i + HAND_SIZE]);
+        strCpy(hand1[i], deck[i]);
+        strCpy(hand2[i], deck[i + HAND_SIZE]);
     }
 
     int score1 = 0, score2 = 0;
@@ -348,8 +338,8 @@ bool createProfileFile(const char username[MAX_USER_PASS_LEN]) {
     }
 
     profile << "Username: " << username << endl;
-    profile << "Games Played: 0" << endl;
-    profile << "Games Won: 0" << endl;
+    profile << "Total games played: 0" << endl;
+    profile << "Total games won: 0" << endl;
     profile << "Total Points: 0" << endl;
 
     profile.close();
@@ -449,6 +439,7 @@ int main() {
             } 
 
             cout << "Both players logged in successfully! Starting game! " << endl;
+            playGame(username1, username2);
         }
         else if (menuChoice == 3) {
             cout << "Exiting program. Goodbye!" << endl;

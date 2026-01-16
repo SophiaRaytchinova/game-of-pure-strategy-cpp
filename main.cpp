@@ -36,6 +36,15 @@ struct Stats {
     int gamesWon;
 };
 
+void waitAndClearScreen() {
+    cout << "\nPress ENTER to continue...";
+    cin.ignore(MAX_USER_PASS_LEN, '\n');
+
+    for (int i = 0; i < 30; i++) {
+        cout << endl;
+    }
+}
+
 bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
 bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &s);
 bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &s);
@@ -123,7 +132,7 @@ void shuffleDeck(char deck[DECK_SIZE][MAX_CARD_LENGTH]) {
 //printHand function prints the cards you have in that moment
 void printHand(char hand[HAND_SIZE][MAX_CARD_LENGTH]) {
     for (size_t i = 0; i < HAND_SIZE; i++) {
-        cout << hand[i] << " ";
+        if (!isStrEmpty(hand[i])) cout << hand[i] << " ";
     }
     cout << endl;
 }
@@ -163,19 +172,35 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
     int score1 = 0, score2 = 0;
 
     for (int r = 0; r < HAND_SIZE; r++) {
-        cout << "\nReward card: " << deck[r] << endl;
-
+        cout << "\nReward card: " << deck[r + 2 * HAND_SIZE] << endl;
         char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
 
-        while (true) {
-            cout << username1 << ", choose card from your hand: ";
-            cin.getline(cardChosenByP1, MAX_CARD_LENGTH);
-            cout << username2 << ", choose card from your hand: ";
-            cin.getline(cardChosenByP2, MAX_CARD_LENGTH);
+    // ----- PLAYER 1 TURN -----
+    cout << "\n" << username1 << "'s turn\n";
+    cout << "Your hand: ";
+    printHand(hand1);
 
-            if (isValidCard(hand1, cardChosenByP1) && isValidCard(hand2, cardChosenByP2)) break;
-            cout << "Invalid card selection! Try again." << endl;
-        }
+    while (true) {
+        cout << "Choose a card: ";
+        cin.getline(cardChosenByP1, MAX_CARD_LENGTH);
+        if (isValidCard(hand1, cardChosenByP1)) break;
+        cout << "Invalid card. Try again.\n";
+    }
+
+    waitAndClearScreen();
+
+    // ----- PLAYER 2 TURN -----
+    cout << "\n" << username2 << "'s turn\n";
+    cout << "Your hand: ";
+    printHand(hand2);
+
+    while (true) {
+        cout << "Choose a card: ";
+        cin.getline(cardChosenByP2, MAX_CARD_LENGTH);
+        if (isValidCard(hand2, cardChosenByP2)) break;
+        cout << "Invalid card. Try again.\n";
+    }
+
         removeCard(hand1, cardChosenByP1);
         removeCard(hand2, cardChosenByP2);
 
@@ -322,8 +347,6 @@ void getProfileFileName(const char username[MAX_USER_PASS_LEN], char fileName[MA
     fileName[i] = '\0';
 }
 
-
-
 //createProfileFile function creates a profile file for the new user
 bool createProfileFile(const char username[MAX_USER_PASS_LEN]) {
     char profileFile[MAX_USER_PASS_LEN];
@@ -370,12 +393,6 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
     userFile.close();
     return false; // login failed
 }
-
-void waitForEnter() {
-    cout << "Press ENTER to continue...";
-    cin.ignore(MAX_USER_PASS_LEN, '\n');
-}
-
 
 void printMainMenu() {
     cout << "===== CARD GAME MENU =====" << endl;
@@ -446,7 +463,7 @@ int main() {
 
             cout << "Both players logged in successfully! Starting game! " << endl;
             
-            waitForEnter();
+            waitAndClearScreen();
             playGame(username1, username2);
         }
         else if (menuChoice == 3) {

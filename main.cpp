@@ -34,6 +34,8 @@ const int KING_POINTS = 13;
 bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
 //bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]);
 
+
+
 bool strCmp(const char* a, const char* b) {
     int i = 0;
 
@@ -100,6 +102,7 @@ void swapCards(char* a, char* b) {
     b[i] = '\0';
 }
 
+
 //cardPoints function returns the points of a given card as an integer
 int cardPoints(const char* card) {
     if (areStrEqual(card, "A")) return ACE_POINTS;
@@ -128,6 +131,23 @@ void printHand(char hand[HAND_SIZE][MAX_CARD_LENGTH]) {
         cout << hand[i] << " ";
     }
     cout << endl;
+}
+
+bool removeCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
+    // find the card in hand and remove it
+    for (int i = 0; i < HAND_SIZE; i++) {
+        if (strCmp(hand[i], card) == 0) {
+            strCpy(hand[i], ""); // mark as used
+            return true;
+        }
+    }
+    return false; // card not found
+}
+
+bool isValidCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
+    for (int i = 0; i < HAND_SIZE; i++)
+        if (strCmp(hand[i], card) == 0) return true;
+    return false;
 }
 
 // --Functions for profiles--

@@ -108,7 +108,6 @@ void swapCards(char* a, char* b) {
     b[i] = '\0';
 }
 
-
 //cardPoints function returns the points of a given card as an integer
 int cardPoints(const char card[MAX_CARD_LENGTH]) {
     if (areStrEqual(card, "A")) return ACE_POINTS;
@@ -208,6 +207,41 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
 }
 
 // --FUNCTIONS FOR PROFILES--
+bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &stats) {
+    char profileFile[MAX_USER_PASS_LEN];
+    getProfileFileName(username, profileFile);
+
+    std::ifstream file(profileFile);
+    if (!file.is_open()) return false;
+
+    char line[256];
+    while (file.getline(line, 256)) {
+        if (strstr(line, "Total games played:") != nullptr)
+            stats.gamesPlayed = atoi(line + 20); // crude parsing
+        if (strstr(line, "Total games won:") != nullptr)
+            stats.gamesWon = atoi(line + 17);
+    }
+    file.close();
+    return true;
+}
+
+bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &stats) {
+    char profileFile[MAX_USER_PASS_LEN];
+    getProfileFileName(username, profileFile);
+
+    std::ofstream file(profileFile);
+    if (!file.is_open()) return false;
+
+    file << "Username: " << username << endl;
+    file << "Total games played: " << stats.gamesPlayed << endl;
+    file << "Total games won: " << stats.gamesWon
+         << " (" << (stats.gamesPlayed > 0 ? stats.gamesWon * 100 / stats.gamesPlayed : 0) << "%)" << endl;
+    file << "Games against other players (wins/%): " << endl;
+
+    file.close();
+    return true;
+}
+
 
 //userExists function checks if the user trying to log exists in the files or not
 bool userExists(const char logUsername[MAX_USER_PASS_LEN], const char logPassword[MAX_USER_PASS_LEN]) {

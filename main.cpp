@@ -199,49 +199,64 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
         cout << username1 << "'s hand: "; printHand(hand1);
         cout << username2 << "'s hand: "; printHand(hand2);
     }
+    
     cout << "\nFinal Scores: ";
     cout << username1 << ": " << score1 << ", " << username2 << ": " << score2 << endl;
     if (score1 > score2) cout << username1 << " wins!\n";
     else if (score2 > score1) cout << username2 << " wins!\n";
     else cout << "Game is a tie!\n";
+
+    bool player1Won = (score1 > score2);
+    bool player2Won = (score2 > score1);
+
+    Stats s1 = {0,0}, s2 = {0,0};
+    loadStats(username1, s1);
+    loadStats(username2, s2);
+
+    s1.gamesPlayed++;
+    s2.gamesPlayed++;
+
+    if(player1Won) s1.gamesWon++;
+    if(player2Won) s2.gamesWon++;
+
+    saveStats(username1, s1);
+    saveStats(username2, s2);
+
 }
 
 // --FUNCTIONS FOR PROFILES--
-bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &stats) {
-    char profileFile[MAX_USER_PASS_LEN];
-    getProfileFileName(username, profileFile);
+bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &s) {
+    char fileName[MAX_USER_PASS_LEN];
+    getProfileFileName(username, fileName);
 
-    std::ifstream file(profileFile);
-    if (!file.is_open()) return false;
+    std::ifstream file;
+    file.open(fileName);
+    if(!file.is_open()) return false;
 
-    char line[256];
-    while (file.getline(line, 256)) {
-        if (strstr(line, "Total games played:") != nullptr)
-            stats.gamesPlayed = atoi(line + 20); // crude parsing
-        if (strstr(line, "Total games won:") != nullptr)
-            stats.gamesWon = atoi(line + 17);
-    }
+    char temp[MAX_USER_PASS_LEN];
+    file >> temp >> temp; // skip "Username: <name>"
+    file >> temp >> temp >> s.gamesPlayed; // "Total games played: X"
+    file >> temp >> temp >> temp >> s.gamesWon; // "Total games won: X"
     file.close();
     return true;
 }
 
+bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &s) {
+    char fileName[MAX_USER_PASS_LEN];
+    getProfileFileName(username, fileName);
 
-bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &stats) {
-    char profileFile[MAX_USER_PASS_LEN];
-    getProfileFileName(username, profileFile);
-
-    std::ofstream file(profileFile);
-    if (!file.is_open()) return false;
+    std::ofstream file;
+    file.open(fileName);
+    if(!file.is_open()) return false;
 
     file << "Username: " << username << endl;
-    file << "Total games played: " << stats.gamesPlayed << endl;
-    file << "Total games won: " << stats.gamesWon
-         << " (" << (stats.gamesPlayed > 0 ? stats.gamesWon * 100 / stats.gamesPlayed : 0) << "%)" << endl;
+    file << "Total games played: " << s.gamesPlayed << endl;
+    file << "Total games won: " << s.gamesWon << endl;
     file << "Games against other players (wins/%): " << endl;
-
     file.close();
     return true;
 }
+
 
 //userExists function checks if the user trying to log exists in the files or not
 bool userExists(const char logUsername[MAX_USER_PASS_LEN], const char logPassword[MAX_USER_PASS_LEN]) {

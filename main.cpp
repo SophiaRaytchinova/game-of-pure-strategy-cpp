@@ -180,10 +180,23 @@ bool registerUser(const std::string& newUsername, const std::string& newPassword
 }
 
 //createProfileFile function creates a profile file for the new user
-bool createProfileFile(const std::string& username) {
+bool createProfileFile(const char* username) {
+    char fileName[MAX_LEN];
+    int i = 0;
+
+    while (username[i] != '\0') {
+        fileName[i] = username[i];
+        i++;
+    }
+    fileName[i++] = '.';
+    fileName[i++] = 't';
+    fileName[i++] = 'x';
+    fileName[i++] = 't';
+    fileName[i] = '\0';
+
     std::ofstream profile;
-    profile.open(username + ".txt"); //creates a new file for user and their stats
-    
+    profile.open(fileName);
+
     if (!profile.is_open()) {
         cout << "Error creating profile file for " << username << "!" << endl;
         return false;

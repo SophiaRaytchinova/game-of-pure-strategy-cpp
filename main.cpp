@@ -141,17 +141,13 @@ bool userExists(const char* logUsername) {
 }
 
 //validRegisterData function checks if the username and password provided during registration are valid
-bool validRegisterData(const std::string& newUsername, const std::string& newPassword){
-    if (newUsername.empty() || newPassword.empty()) {
+bool validRegisterData(const char newUsername[MAX_LEN], const char newPassword[MAX_LEN]){
+    if (isStrEmpty(newUsername) || isStrEmpty(newPassword)) {
         cout << "Username and password cannot be empty!" << endl;
         return false;
     }
-    if (newUsername.find(' ') != std::string::npos) {
-        cout << "Username cannot contain spaces!" << endl;
-        return false;
-    }
-    if (newPassword.find(' ') != std::string::npos) {
-        cout << "Password cannot contain spaces!" << endl;
+    if (containsSpace(newUsername) || containsSpace(newPassword)) {
+        cout << "Username and password cannot contain spaces!" << endl;
         return false;
     }
     return true;

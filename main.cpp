@@ -171,25 +171,25 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
     for (int r = 0; r < HAND_SIZE; r++) {
         cout << "\nReward card: " << deck[r] << endl;
 
-        char c1[MAX_CARD_LENGTH], c2[MAX_CARD_LENGTH];
+        char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
 
         while (true) {
             cout << username1 << ", choose card from your hand: ";
-            cin.getline(c1, MAX_CARD_LENGTH);
+            cin.getline(cardChosenByP1, MAX_CARD_LENGTH);
             cout << username2 << ", choose card from your hand: ";
-            cin.getline(c2, MAX_CARD_LENGTH);
+            cin.getline(cardChosenByP2, MAX_CARD_LENGTH);
 
-            if (isValidCard(hand1, c1) && isValidCard(hand2, c2)) break;
+            if (isValidCard(hand1, cardChosenByP1) && isValidCard(hand2, cardChosenByP2)) break;
             cout << "Invalid card selection! Try again." << endl;
         }
-        removeCard(hand1, c1);
-        removeCard(hand2, c2);
+        removeCard(hand1, cardChosenByP1);
+        removeCard(hand2, cardChosenByP2);
 
-        int p1 = cardPoints(c1);
-        int p2 = cardPoints(c2);
+        int pointsOfChosenCardByP1 = cardPoints(cardChosenByP1);
+        int pointsOfChosenCardByP2 = cardPoints(cardChosenByP2);
 
-        if (p1 > p2) { score1 += p1; cout << username1 << " wins the reward!\n"; }
-        else if (p2 > p1) { score2 += p2; cout << username2 << " wins the reward!\n"; }
+        if (pointsOfChosenCardByP1 > pointsOfChosenCardByP2) { score1 += pointsOfChosenCardByP1; cout << username1 << " wins the reward!\n"; }
+        else if (pointsOfChosenCardByP2 > pointsOfChosenCardByP1) { score2 += pointsOfChosenCardByP2; cout << username2 << " wins the reward!\n"; }
         else cout << "Tie! Reward card remains.\n";
 
         cout << username1 << "'s hand: "; printHand(hand1);

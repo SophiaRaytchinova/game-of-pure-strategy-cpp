@@ -31,6 +31,11 @@ const int JACK_POINTS = 11;
 const int QUEEN_POINTS = 12;
 const int KING_POINTS = 13;
 
+struct Stats {
+    int gamesPlayed;
+    int gamesWon;
+}
+
 bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
 //bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]);
 
@@ -278,6 +283,8 @@ void getProfileFileName(const char username[MAX_USER_PASS_LEN], char fileName[MA
     fileName[i] = '\0';
 }
 
+
+
 //createProfileFile function creates a profile file for the new user
 bool createProfileFile(const char username[MAX_USER_PASS_LEN]) {
     char profileFile[MAX_USER_PASS_LEN];
@@ -292,9 +299,9 @@ bool createProfileFile(const char username[MAX_USER_PASS_LEN]) {
     }
 
     profile << "Username: " << username << endl;
-    profile << "Total games played: 0" << endl;
-    profile << "Total games won: 0 (0%)" << endl;
-    profile << "Games against other players (wins/%): " << endl;
+    profile << "Games Played: 0" << endl;
+    profile << "Games Won: 0" << endl;
+    profile << "Total Points: 0" << endl;
 
     profile.close();
     return true;

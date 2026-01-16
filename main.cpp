@@ -185,7 +185,6 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
     int score1 = 0, score2 = 0, accumulatedRewardPoints = 0;
     // reward card is deck[r]
     for (int r = 0; r < HAND_SIZE; r++) {
-        waitAndClearScreen();
         cout << "\nReward card: " << deck[r] << endl;
         accumulatedRewardPoints += cardPoints(deck[r]);
         char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
@@ -215,6 +214,8 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
         if (isValidCard(hand2, cardChosenByP2)) break;
         cout << "Invalid card. Try again.\n";
     }
+
+    waitAndClearScreen();
 
         removeCard(hand1, cardChosenByP1);
         removeCard(hand2, cardChosenByP2);

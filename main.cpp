@@ -150,8 +150,57 @@ bool isValidCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
         if (strCmp(hand[i], card) == 0) return true;
     return false;
 }
-// --FUNCTIONS FOR GAMEPLAY--
 
+// --FUNCTIONS FOR GAMEPLAY--
+void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_USER_PASS_LEN]) {
+    char deck[DECK_SIZE][MAX_CARD_LENGTH] = { 
+        "A", "2", "3", "4", "5", "6", "7", 
+        "8", "9", "10", "J", "Q", "K"
+    };
+    shuffleDeck(deck);
+
+    char hand1[HAND_SIZE][MAX_CARD_LENGTH];
+    char hand2[HAND_SIZE][MAX_CARD_LENGTH];
+    for (int i = 0; i < HAND_SIZE; i++) {
+        strcpy(hand1[i], deck[i]);
+        strcpy(hand2[i], deck[i + HAND_SIZE]);
+    }
+
+    int score1 = 0, score2 = 0;
+
+    for (int r = 0; r < HAND_SIZE; r++) {
+        cout << "\nReward card: " << deck[r] << endl;
+
+        char c1[MAX_CARD_LENGTH], c2[MAX_CARD_LENGTH];
+
+        while (true) {
+            cout << username1 << ", choose card from your hand: ";
+            cin.getline(c1, MAX_CARD_LENGTH);
+            cout << username2 << ", choose card from your hand: ";
+            cin.getline(c2, MAX_CARD_LENGTH);
+
+            if (isValidCard(hand1, c1) && isValidCard(hand2, c2)) break;
+            cout << "Invalid card selection! Try again." << endl;
+        }
+        removeCard(hand1, c1);
+        removeCard(hand2, c2);
+
+        int p1 = cardPoints(c1);
+        int p2 = cardPoints(c2);
+
+        if (p1 > p2) { score1 += p1; cout << username1 << " wins the reward!\n"; }
+        else if (p2 > p1) { score2 += p2; cout << username2 << " wins the reward!\n"; }
+        else cout << "Tie! Reward card remains.\n";
+
+        cout << username1 << "'s hand: "; printHand(hand1);
+        cout << username2 << "'s hand: "; printHand(hand2);
+    }
+    cout << "\nFinal Scores: ";
+    cout << username1 << ": " << score1 << ", " << username2 << ": " << score2 << endl;
+    if (score1 > score2) cout << username1 << " wins!\n";
+    else if (score2 > score1) cout << username2 << " wins!\n";
+    else cout << "Game is a tie!\n";
+}
 
 // --FUNCTIONS FOR PROFILES--
 
@@ -274,13 +323,6 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
     return false; // login failed
 }
 
-
-
-
-
-
-
-
 void printMainMenu() {
     cout << "===== CARD GAME MENU =====" << endl;
     cout << "1. Register" << endl;
@@ -297,7 +339,6 @@ int main() {
     char password[MAX_USER_PASS_LEN];
 
     while (true) {
-        // Main menu
         printMainMenu();
 
         cin >> menuChoice;
@@ -335,7 +376,7 @@ int main() {
             if (loginUser(username, password)) {
                 cout << "Login successful! Welcome, " << username << "!" << endl;
 
-                char deck[13][MAX_CARD_LENGTH] = { 
+                char deck[DECK_SIZE][MAX_CARD_LENGTH] = { 
                     "A", "2", "3", "4", "5", "6", "7", 
                     "8", "9", "10", "J", "Q", "K"
                 };
@@ -379,5 +420,3 @@ int main() {
 
     return 0;
 }
-
-

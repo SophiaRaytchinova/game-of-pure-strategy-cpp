@@ -13,21 +13,19 @@
 *
 */
 
-//for now comments are only for my understanding, will clean up later
 #include <iostream>
-#include <fstream> // for file operations
-#include <cstdlib> // for rand() and srand()
-#include <ctime>   // for time()
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
 using std::cin;
 using std::cout;
 using std::endl;
 
-const int MAX_OPPONENTS = 20;
+const int MAX_OPPONENTS = 50; //so we can track stats against max 50 different opponents
 const int MAX_USER_PASS_LEN = 1024;
-const int DECK_SIZE = 13; //number of different cards in the deck
+const int DECK_SIZE = 13; //number of different cards in the deck (A, 2, 3, 4, 5, 6, 7, 8, 9 , 10, J, Q, K)
 const int HAND_SIZE = DECK_SIZE;
-const int MAX_CARD_LENGTH = 4; //max length of card string (e.g., "10" + '\0')
-
+const int MAX_CARD_LENGTH = 4; //max length of card char[] (e.g., "10" + '\0')
 
 const int ACE_POINTS = 1;
 const int JACK_POINTS = 11;
@@ -46,10 +44,7 @@ struct OpponentStats {
 };
 
 bool createProfileFile(const char username [MAX_USER_PASS_LEN]);
-//bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &s);
-//bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &s);
 void getProfileFileName(const char username[MAX_USER_PASS_LEN], char fileName[MAX_USER_PASS_LEN]);
-//bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]);
 bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[], int &opponentCount);
 bool saveFullProfile(const char username[], const Stats &s, OpponentStats opponents[], int opponentCount);
 void updateOpponent(OpponentStats opponents[], int &count, const char opponentName[], bool won);
@@ -183,6 +178,11 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
     shuffleDeck(deck);
 
     int score1 = 0, score2 = 0, accumulatedRewardPoints = 0;
+    char rewards1[DECK_SIZE][MAX_CARD_LENGTH];
+    char rewards2[DECK_SIZE][MAX_CARD_LENGTH];
+    int rewardsCount1 = 0;
+    int rewardsCount2 = 0;
+
     // reward card is deck[r]
     for (int r = 0; r < HAND_SIZE; r++) {
         //waitAndClearScreen();
@@ -194,6 +194,10 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
     cout << "\n" << username1 << "'s turn\n";
     cout << "Your hand: ";
     printHand(hand1);
+    cout << "Your reward cards so far: ";
+    for (int i = 0; i < rewardsCount1; i++) {
+        cout << rewards1[i] << " ";
+    }
 
     while (true) {
         cout << "Choose a card: ";
@@ -209,6 +213,11 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
     cout << "\n" << username2 << "'s turn\n";
     cout << "Your hand: ";
     printHand(hand2);
+    cout << "Your reward cards so far: ";
+    for (int i = 0; i < rewardsCount2; i++) {
+        cout << rewards2[i] << " ";
+    }
+
 
     while (true) {
         cout << "Choose a card: ";
@@ -224,14 +233,19 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
 
         int pointsOfChosenCardByP1 = cardPoints(cardChosenByP1);
         int pointsOfChosenCardByP2 = cardPoints(cardChosenByP2);
+        cout << username1 << " played: " << cardChosenByP1 << " (" << pointsOfChosenCardByP1 << " points)" << endl;
+        cout << username2 << " played: " << cardChosenByP2 << " ("  << pointsOfChosenCardByP2 << " points)" << endl;
 
         if (pointsOfChosenCardByP1 > pointsOfChosenCardByP2) { 
             score1 += accumulatedRewardPoints; 
+            strCpy(rewards1[rewardsCount1++], deck[r]);
             accumulatedRewardPoints = 0;
             cout << username1 << " wins the reward!"; 
         }
         else if (pointsOfChosenCardByP2 > pointsOfChosenCardByP1) { 
             score2 += accumulatedRewardPoints; 
+            strCpy(rewards2[rewardsCount2++], deck[r]);
+            accumulatedRewardPoints = 0;
             cout << username2 << " wins the reward!"; 
         }
         else cout << "Tie! Reward card remains.\n";

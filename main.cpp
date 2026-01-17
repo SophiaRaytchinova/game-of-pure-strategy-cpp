@@ -277,89 +277,38 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
         "8", "9", "10", "J", "Q", "K"
     };
 
-    char hand1[HAND_SIZE][MAX_CARD_LENGTH];
-    char hand2[HAND_SIZE][MAX_CARD_LENGTH];
-    for (int i = 0; i < HAND_SIZE; i++) {
-        strCpy(hand1[i], deck[i]);
-        strCpy(hand2[i], deck[i]);
-    }
     shuffleDeck(deck);
 
+    char hand1[HAND_SIZE][MAX_CARD_LENGTH];
+    char hand2[HAND_SIZE][MAX_CARD_LENGTH];
+    initializeHands(hand1, hand2, deck);
+    
     int score1 = 0, score2 = 0, accumulatedRewardPoints = 0;
     char rewards1[DECK_SIZE][MAX_CARD_LENGTH];
     char rewards2[DECK_SIZE][MAX_CARD_LENGTH];
-    int rewardsCount1 = 0;
-    int rewardsCount2 = 0;
+    int rewardsCount1 = 0, rewardsCount2 = 0;
 
-    // reward card is deck[r]
-    for (int r = 0; r < HAND_SIZE; r++) {
-        //waitAndClearScreen();
-        cout << "\nReward card: " << deck[r] << endl;
-        accumulatedRewardPoints += cardPoints(deck[r]);
-        char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
-
-    // ----- PLAYER 1 TURN -----
-    playerTurn(username1, hand1, rewards1, rewardsCount1, cardChosenByP1);
-    waitAndClearScreen();
-
-    // ----- PLAYER 2 TURN -----
-    playerTurn(username2, hand2, rewards2, rewardsCount2, cardChosenByP2);
-    waitAndClearScreen();
-
-        removeCard(hand1, cardChosenByP1);
-        removeCard(hand2, cardChosenByP2);
-
-        int pointsOfChosenCardByP1 = cardPoints(cardChosenByP1);
-        int pointsOfChosenCardByP2 = cardPoints(cardChosenByP2);
-        cout << username1 << " played: " << cardChosenByP1 << " (" << pointsOfChosenCardByP1 << " points)" << endl;
-        cout << username2 << " played: " << cardChosenByP2 << " ("  << pointsOfChosenCardByP2 << " points)" << endl;
-
-        if (pointsOfChosenCardByP1 > pointsOfChosenCardByP2) { 
-            score1 += accumulatedRewardPoints; 
-            strCpy(rewards1[rewardsCount1++], deck[r]);
-            accumulatedRewardPoints = 0;
-            cout << username1 << " wins the reward!"; 
-        }
-        else if (pointsOfChosenCardByP2 > pointsOfChosenCardByP1) { 
-            score2 += accumulatedRewardPoints; 
-            strCpy(rewards2[rewardsCount2++], deck[r]);
-            accumulatedRewardPoints = 0;
-            cout << username2 << " wins the reward!"; 
-        }
-        else cout << "Tie! Reward card remains.\n";
-
-        //cout << username1 << "'s hand: "; printHand(hand1);
-        //cout << username2 << "'s hand: "; printHand(hand2);
+    for (int j = 0; j < HAND_SIZE; j++) {
+        playRound(
+            j,
+            username1, username2,
+            hand1, hand2,
+            deck,
+            score1, score2,
+            accumulatedRewardPoints,
+            rewards1, rewards2,
+            rewardsCount1, rewardsCount2
+        );
     }
 
     cout << "\nFinal Scores: ";
-    cout << username1 << ": " << score1 << ", " << username2 << ": " << score2 << endl;
-    
-    if (score1 > score2) cout << username1 << " wins!\n";
-    else if (score2 > score1) cout << username2 << " wins!\n";
-    else cout << "Game is a tie!\n";
+    cout << username1 << ": " << score1 << endl;
+    cout << username2 << ": " << score2 << endl;
 
-    bool player1Won = (score1 > score2);
-    bool player2Won = (score2 > score1);
+    bool player1Won = score1 > score2;
+    bool player2Won = score2 > score1;
 
-    Stats s1 = {0, 0}, s2 = {0, 0};
-    OpponentStats opp1[MAX_OPPONENTS], opp2[MAX_OPPONENTS];
-    int oppCount1 = 0, oppCount2 = 0;
-
-    loadFullProfile(username1, s1, opp1, oppCount1);
-    loadFullProfile(username2, s2, opp2, oppCount2);
-
-    s1.gamesPlayed++;
-    s2.gamesPlayed++;
-
-    if (player1Won) s1.gamesWon++;
-    if (player2Won) s2.gamesWon++;
-
-    updateOpponent(opp1, oppCount1, username2, player1Won);
-    updateOpponent(opp2, oppCount2, username1, player2Won);
-
-    saveFullProfile(username1, s1, opp1, oppCount1);
-    saveFullProfile(username2, s2, opp2, oppCount2);
+    updateStatsAfterGame(username1, username2, player1Won, player2Won);
 }
 
 // --FUNCTIONS FOR PROFILES--

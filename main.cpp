@@ -182,11 +182,67 @@ void playerTurn(const char username[MAX_USER_PASS_LEN], char hand[HAND_SIZE][MAX
     }
 }
 
-void initializeHands (char hand1[HAND_SIZE][MAX_CARD_LENGTH], char hand2[HAND_SIZE][MAX_CARD_LENGTH],char deck[DECK_SIZE][MAX_CARD_LENGTH]) {
+void initializeHands (
+    char hand1[HAND_SIZE][MAX_CARD_LENGTH], 
+    char hand2[HAND_SIZE][MAX_CARD_LENGTH], 
+    char deck[DECK_SIZE][MAX_CARD_LENGTH]
+) {
     for (int i = 0; i< HAND_SIZE; i++) {
         strCpy(hand1[i], deck[i]);
         strCpy(hand2[i], deck[i]);
     }
+}
+
+void playRound(
+    int roundIndex,
+    const char username1[MAX_USER_PASS_LEN],
+    const char username2[MAX_USER_PASS_LEN],
+    char hand1[HAND_SIZE][MAX_CARD_LENGTH],
+    char hand2[HAND_SIZE][MAX_CARD_LENGTH],
+    char deck[DECK_SIZE][MAX_CARD_LENGTH],
+    int &score1,
+    int &score2,
+    int &accRewards,
+    char rewards1[DECK_SIZE][MAX_CARD_LENGTH],
+    char rewards2[DECK_SIZE][MAX_CARD_LENGTH],
+    int &rewardsCount1,
+    int &rewardsCount2
+) {
+    cout << "\nReward card: " << deck[roundIndex] << endl;
+    accRewards += cardPoints(deck[roundIndex]);
+
+    char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
+    // ----- PLAYER 1 TURN -----
+    playerTurn(username1, hand1, rewards1, rewardsCount1, cardChosenByP1);
+    waitAndClearScreen();
+
+    // ----- PLAYER 2 TURN -----
+    playerTurn(username2, hand2, rewards2, rewardsCount2, cardChosenByP2);
+    waitAndClearScreen();
+
+    removeCard(hand1, cardChosenByP1);
+    removeCard(hand2, cardChosenByP2);
+
+    int pointsOfChosenCardByP1 = cardPoints(cardChosenByP1);
+    int pointsOfChosenCardByP2 = cardPoints(cardChosenByP2);
+
+    cout << username1 << " played: " << cardChosenByP1 << " (" << pointsOfChosenCardByP1 << " points)" << endl;
+    cout << username2 << " played: " << cardChosenByP2 << " ("  << pointsOfChosenCardByP2 << " points)" << endl;
+
+    if (pointsOfChosenCardByP1 > pointsOfChosenCardByP2) { 
+        score1 += accRewards; 
+        strCpy(rewards1[rewardsCount1++], deck[roundIndex]);
+        accRewards = 0;
+        cout << username1 << " wins the reward!"; 
+    }
+    else if (pointsOfChosenCardByP2 > pointsOfChosenCardByP1) { 
+        score2 += accRewards; 
+        strCpy(rewards2[rewardsCount2++], deck[roundIndex]);
+        accRewards = 0;
+        cout << username2 << " wins the reward!"; 
+    }
+    else cout << "Tie! Reward card remains.\n";
+
 }
 
 void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX_USER_PASS_LEN]) {

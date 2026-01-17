@@ -163,6 +163,26 @@ bool isValidCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
 }
 
 // --FUNCTIONS FOR GAMEPLAY--
+void playerTurn(const char username[MAX_USER_PASS_LEN], char hand[HAND_SIZE][MAX_CARD_LENGTH], char rewards[DECK_SIZE][MAX_CARD_LENGTH], int rewardsCount, char chosenCard[MAX_CARD_LENGTH]) {
+    cout << "\n" << username << "'s turn\n";
+    cout << "Your hand: ";
+    printHand(hand);
+
+    cout << "Your reward cards so far: ";
+    for (int i = 0; i < rewardsCount; i++) {
+        cout << rewards[i] << " ";
+    }
+    cout << endl;
+
+    while (true) {
+        cout << "Choose a card: ";
+        cin.getline(chosenCard, MAX_CARD_LENGTH);
+        if (isValidCard(hand, chosenCard)) break;
+        cout << "Invalid card. Try again. \n";
+    }
+}
+
+
 void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_USER_PASS_LEN]) {
     char deck[DECK_SIZE][MAX_CARD_LENGTH] = { 
         "A", "2", "3", "4", "5", "6", "7", 
@@ -191,41 +211,11 @@ void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_
         char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
 
     // ----- PLAYER 1 TURN -----
-    cout << "\n" << username1 << "'s turn\n";
-    cout << "Your hand: ";
-    printHand(hand1);
-    cout << "Your reward cards so far: ";
-    for (int i = 0; i < rewardsCount1; i++) {
-        cout << rewards1[i] << " ";
-    }
-
-    while (true) {
-        cout << "Choose a card: ";
-        cin.getline(cardChosenByP1, MAX_CARD_LENGTH);
-        if (isValidCard(hand1, cardChosenByP1)) break;
-        cout << "Invalid card. Try again.\n";
-    }
-
+    playerTurn(username1, hand1, rewards1, rewardsCount1, cardChosenByP1);
     waitAndClearScreen();
 
     // ----- PLAYER 2 TURN -----
-    cout << "\nReward card: " << deck[r] << endl;
-    cout << "\n" << username2 << "'s turn\n";
-    cout << "Your hand: ";
-    printHand(hand2);
-    cout << "Your reward cards so far: ";
-    for (int i = 0; i < rewardsCount2; i++) {
-        cout << rewards2[i] << " ";
-    }
-
-
-    while (true) {
-        cout << "Choose a card: ";
-        cin.getline(cardChosenByP2, MAX_CARD_LENGTH);
-        if (isValidCard(hand2, cardChosenByP2)) break;
-        cout << "Invalid card. Try again.\n";
-    }
-
+    playerTurn(username2, hand2, rewards2, rewardsCount2, cardChosenByP2);
     waitAndClearScreen();
 
         removeCard(hand1, cardChosenByP1);

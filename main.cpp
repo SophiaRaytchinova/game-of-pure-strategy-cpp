@@ -354,42 +354,6 @@ bool saveFullProfile(const char username[], const Stats &s, OpponentStats oppone
     return true;
 }
 
-
-
-// bool loadStats(const char username[MAX_USER_PASS_LEN], Stats &s) {
-//     char fileName[MAX_USER_PASS_LEN];
-//     getProfileFileName(username, fileName);
-
-//     std::ifstream file;
-//     file.open(fileName);
-//     if(!file.is_open()) return false;
-
-//     char temp[MAX_USER_PASS_LEN];
-//     file >> temp >> temp; // skip "Username: <name>"
-//     file >> temp >> temp >> s.gamesPlayed; // "Total games played: X"
-//     file >> temp >> temp >> temp >> s.gamesWon; // "Total games won: X"
-//     file.close();
-//     return true;
-// }
-
-// bool saveStats(const char username[MAX_USER_PASS_LEN], const Stats &s) {
-//     char fileName[MAX_USER_PASS_LEN];
-//     getProfileFileName(username, fileName);
-
-//     std::ofstream file;
-//     file.open(fileName);
-//     if(!file.is_open()) return false;
-
-//     file << "Username: " << username << endl;
-//     file << "Total games played: " << s.gamesPlayed << endl;
-//     file << "Total games won: " << s.gamesWon << endl;
-//     file << "Games against other players (wins/%): " << endl;
-//     file.close();
-//     return true;
-// }
-
-
-//userExists function checks if the user trying to log exists in the files or not
 bool userExists(const char logUsername[MAX_USER_PASS_LEN], const char logPassword[MAX_USER_PASS_LEN]) {
     if (isStrEmpty(logUsername)) return false;
 

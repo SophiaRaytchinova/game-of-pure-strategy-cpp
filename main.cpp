@@ -182,8 +182,14 @@ void playerTurn(const char username[MAX_USER_PASS_LEN], char hand[HAND_SIZE][MAX
     }
 }
 
+void initializeHands (char hand1[HAND_SIZE][MAX_CARD_LENGTH], char hand2[HAND_SIZE][MAX_CARD_LENGTH],char deck[DECK_SIZE][MAX_CARD_LENGTH]) {
+    for (int i = 0; i< HAND_SIZE; i++) {
+        strCpy(hand1[i], deck[i]);
+        strCpy(hand2[i], deck[i]);
+    }
+}
 
-void playGame(const char username1[MAX_USER_PASS_LEN], const char username2[MAX_USER_PASS_LEN]) {
+void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX_USER_PASS_LEN]) {
     char deck[DECK_SIZE][MAX_CARD_LENGTH] = { 
         "A", "2", "3", "4", "5", "6", "7", 
         "8", "9", "10", "J", "Q", "K"

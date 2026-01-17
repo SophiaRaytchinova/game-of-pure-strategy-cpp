@@ -245,6 +245,32 @@ void playRound(
 
 }
 
+void updateStatsAfterGame(
+    const char username1[MAX_USER_PASS_LEN],
+    const char username2[MAX_USER_PASS_LEN],
+    bool player1Won,
+    bool player2Won
+) {
+    Stats s1 = {0, 0}, s2 = {0, 0};
+    OpponentStats opp1[MAX_OPPONENTS], opp2[MAX_OPPONENTS];
+    int oppCount1 = 0, oppCount2 = 0;
+
+    loadFullProfile(username1, s1, opp1, oppCount1);
+    loadFullProfile(username2, s2, opp2, oppCount2);
+
+    s1.gamesPlayed++;
+    s2.gamesPlayed++;
+
+    if (player1Won) s1.gamesWon++;
+    if (player2Won) s2.gamesWon++;
+
+    updateOpponent(opp1, oppCount1, username2, player1Won);
+    updateOpponent(opp2, oppCount2, username1, player2Won);
+
+    saveFullProfile(username1, s1, opp1, oppCount1);
+    saveFullProfile(username2, s2, opp2, oppCount2);
+}
+
 void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX_USER_PASS_LEN]) {
     char deck[DECK_SIZE][MAX_CARD_LENGTH] = { 
         "A", "2", "3", "4", "5", "6", "7", 

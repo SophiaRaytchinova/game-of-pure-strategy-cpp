@@ -418,6 +418,7 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
     cout << "GAME OVER!" << endl;
     cout<< "Press ENTER to return to main menu...";
     cout << endl;
+    cin.clear();
     cin.ignore(MAX_USER_PASS_LEN, '\n');
 }
 
@@ -616,6 +617,7 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
 
 // --FUNCTIONS TO USE IN MAIN--
 void printStartMenu() {
+    cout << endl;
     cout << "------- PURE STRATEGY MENU -------" << endl;
     cout << "       1. Register new user" << endl;
     cout << "         2. Login user1" << endl;

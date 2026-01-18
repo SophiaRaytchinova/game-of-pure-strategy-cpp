@@ -273,7 +273,7 @@ bool playRound(
 ) {
     char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
     waitAndClearScreen();
-    cout << "\nReward card for this round: " << deck[roundIndex]; //<< endl
+    cout << "\nReward card for this round: " << deck[roundIndex] << endl;
     if (accumulatedRewardCount > 0) {
         cout << "\nCurrent reward cards on the table: ";
         for (int i = 0; i < accumulatedRewardCount; i++) {
@@ -621,7 +621,7 @@ void printStartMenu() {
     cout << "       1. Register new user" << endl;
     cout << "         2. Login user1" << endl;
     cout << "         3. Login user2" << endl;
-    cout << "         4. Start game" << endl;
+    cout << "       4. Go to game lobby" << endl;
     cout << "          5. Exit game" << endl;
     cout << "----------------------------------" << endl;
     cout << "Enter your choice: ";
@@ -668,7 +668,6 @@ void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN])
         cout << "                 6. Exit lobby" << endl;
         cout << "-----------------------------------------------" << endl;
         cout << "Enter your choice: ";
-        cin >> choice;
 
         if (!(cin >> choice)) {
             cin.clear();

@@ -657,6 +657,10 @@ void showProfileStats(const char username[MAX_USER_PASS_LEN]) {
 void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN]) {
     int choice;
     while (true) {
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(MAX_USER_PASS_LEN, '\n');
+        }
         cout << "Logged in as: " << player1 << " and " << player2 << endl;
         cout << "------------- PURE STRATEGY LOBBY -------------" << endl;
         cout << "                1. Start game" << endl;
@@ -686,7 +690,7 @@ void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN])
             }
             else playGame(player1, player2);
         } 
-        if (choice == 2) {
+        else if (choice == 2) {
             showProfileStats(player1);
             waitAndClearScreen();
         }

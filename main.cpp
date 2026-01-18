@@ -86,22 +86,6 @@ bool validData(const char newUsername[MAX_USER_PASS_LEN], const char newPassword
     return true;
 }
 
-// bool isUsernameTaken(const char newUsername[MAX_USER_PASS_LEN]) {
-//     std::ifstream user;
-//     user.open("users.txt");
-//     if (!user.is_open()) return false;
-
-//     char fileUsername[MAX_USER_PASS_LEN], filePassword[MAX_USER_PASS_LEN];
-//     while (user >> fileUsername >> filePassword) {
-//         if (areStrEqual(fileUsername, newUsername)) {
-//             user.close();
-//             return true;
-//         }
-//     }
-//     user.close();
-//     return false;
-// }
-
 // --FUNCTIONS FOR CHAR ARRAY--
 void trimStr(char str[MAX_CARD_LENGTH]) {
     int start = 0;
@@ -390,8 +374,6 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
     int accumulatedRewardCount = 0;
     char accumulatedRewards[DECK_SIZE][MAX_CARD_LENGTH];
 
-    if (cin.peek() == '\n') cin.ignore();
-
     int roundIndex = 0;
     while (roundIndex < HAND_SIZE) {
         bool roundHadWinner = playRound(
@@ -616,32 +598,41 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
 void printStartMenu() {
     cout << "------- PURE STRATEGY MENU -------" << endl;
     cout << "       1. Register new user" << endl;
-    cout << "        2. Login and play" << endl;
-    cout << "          3. Exit game" << endl;
+    cout << "         2. Login user1" << endl;
+    cout << "         3. Login user2" << endl;
+    cout << "         4. Start game" << endl;
+    cout << "          5. Exit game" << endl;
     cout << "----------------------------------" << endl;
     cout << "Enter your choice: ";
 }
 
-void loginMenu(const char player1[MAX_USER_PASS_LEN], const char player2[MAX_USER_PASS_LEN]) {
+void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN]) {
     int choice;
     while (true) {
         cout << "Logged in as: " << player1 << " and " << player2 << endl;
-        cout << "------- PURE STRATEGY LOBBY -------" << endl;
-        cout << "          1. Start game" << endl;
-        cout << " 2. Log out and return to main menu" << endl;
-        cout << "           3. Exit game" << endl;
-        cout << "-----------------------------------" << endl;
+        cout << "------------- PURE STRATEGY LOBBY -------------" << endl;
+        cout << "                1. Start game" << endl;
+        cout << " 2. Log out from user1 and return to main menu" << endl;
+        cout << " 3. Log out from user2 and return to main menu" << endl;
+        cout << "                4. Exit game" << endl;
+        cout << "-----------------------------------------------" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
-
+        cin.ignore(MAX_USER_PASS_LEN, '\n');
         if (choice == 1) {
             playGame(player1, player2);
         } 
         else if (choice == 2) {
-            cout << "Logging out and returning to main menu..." << endl;
+            strCpy(player1, "");
+            cout << "Player1 logged out and returning to main menu..." << endl;
+            break;
+        }
+        else if (choice == 3) {
+            strCpy(player2, "");
+            cout << "Player2 logged out and returning to main menu..." << endl;
             break;
         } 
-        else if (choice == 3) {
+        else if (choice == 4) {
             cout << "Exiting program. Goodbye!" << endl;
             break;
         }
@@ -653,67 +644,93 @@ void loginMenu(const char player1[MAX_USER_PASS_LEN], const char player2[MAX_USE
 
 void runGame() {
     int menuChoice;
-    char username1[MAX_USER_PASS_LEN], password1[MAX_USER_PASS_LEN];
-    char username2[MAX_USER_PASS_LEN], password2[MAX_USER_PASS_LEN];
+    char username1[MAX_USER_PASS_LEN] = "", password1[MAX_USER_PASS_LEN] = "";
+    char username2[MAX_USER_PASS_LEN] = "", password2[MAX_USER_PASS_LEN] = "";
 
     while (true) {
+        cout << "------------ SESSION --------------"  << endl;
+        cout <<"Player1: " << (isStrEmpty(username1) ? "[Not logged in]" : username1) << endl;
+        cout <<"Player2: " << (isStrEmpty(username2) ? "[Not logged in]" : username2) << endl;
+
         printStartMenu();
-        cin >> menuChoice;
-        if (cin.fail()) {
+        if (!(cin >> menuChoice)) {
             cin.clear();
             cin.ignore(MAX_USER_PASS_LEN, '\n');
             cout << "Invalid choice. Try again." << endl;
-            cout << endl;
             continue;
         }
-        cin.ignore();
+        cin.ignore(MAX_USER_PASS_LEN, '\n');
 
         if (menuChoice == 1) {
+            char regUsername[MAX_USER_PASS_LEN];
+            char regPassword[MAX_USER_PASS_LEN];
+            cout << "----------- REGISTER NEW ACCOUNT -----------" << endl;
             cout << "Enter new username: ";
-            cin.getline(username1, MAX_USER_PASS_LEN);
+            cin.getline(regUsername, MAX_USER_PASS_LEN);
             cout << "Enter new password: ";
-            cin.getline(password1, MAX_USER_PASS_LEN);
+            cin.getline(regPassword, MAX_USER_PASS_LEN);
 
-            if (registerUser(username1, password1)) {
+            if (registerUser(regUsername, regPassword)) {
                 cout << "Registration successful! You can now login." << endl;
             } else {
                 cout << "Registration failed. Try again." << endl;
             }
         }
         else if (menuChoice == 2) {
+            char tempUsername[MAX_USER_PASS_LEN];
             cout << "Player 1 -> Enter username: ";
-            cin.getline(username1, MAX_USER_PASS_LEN);
+            cin.getline(tempUsername, MAX_USER_PASS_LEN);
+
+            if (areStrEqual(username2, tempUsername)) {
+                cout << "Cannot log in the same profile as Player 2." << endl;
+                continue;
+            }
+
             cout << "Player 1 -> Enter password: ";
             cin.getline(password1, MAX_USER_PASS_LEN);
 
-            if (!loginUser(username1, password1)) {
+            if (!loginUser(tempUsername, password1)) {
                 cout << "Login failed for player1. Check username/password. " << endl;
                 continue;
             } 
-
+            strCpy(username1, tempUsername);
+            cout << "Player 1 logged in successfully!" << endl;
+        }
+        else if (menuChoice == 3) {
+            char tempUsername[MAX_USER_PASS_LEN];
             cout << "Player 2 -> Enter username: ";
-            cin.getline(username2, MAX_USER_PASS_LEN);
+            cin.getline(tempUsername, MAX_USER_PASS_LEN);
 
-            if (areStrEqual(username1, username2)) {
-                cout << "Cannot log in the same profile as Player 1. Try again." << endl;
+            if (areStrEqual(username1, tempUsername)) {
+                cout << "Cannot log in the same profile as Player 1." << endl;
                 continue;
             }
 
             cout << "Player 2 -> Enter password: ";
             cin.getline(password2, MAX_USER_PASS_LEN);
 
-            if (!loginUser(username2, password2)) {
+            if (!loginUser(tempUsername, password2)) {
                 cout << "Login failed for player2. Check username/password. " << endl;
                 continue;
             } 
-
-            cout << "Both players logged in successfully!" << endl;
-            cout << "Entering game lobby..." << endl;
+            strCpy(username2, tempUsername);
+            cout << "Player 2 logged in successfully!" << endl;
+        }  
+        else if (menuChoice == 4) {
             cout << endl;
-            //waitAndClearScreen();
-            loginMenu(username1, username2);
+            if (isStrEmpty(username1) || isStrEmpty(username2)) {
+                cout << "Error! Both players must be logged in to start the game!" << endl;
+                cout << "Current player1: " << (isStrEmpty(username1) ? "[Not logged in]" : "OK") << endl;
+                cout << "Current player2: " << (isStrEmpty(username2) ? "[Not logged in]" : "OK") << endl;
+                //continue;
+            }
+            else {
+                cout << "Entering game lobby..." << endl;
+                cout << endl;
+                loginMenu(username1, username2);
+            }
         }
-        else if (menuChoice == 3) {
+        else if (menuChoice == 5) {
             cout << "Exiting program. Goodbye!" << endl;
             break;
         }

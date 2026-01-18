@@ -334,6 +334,19 @@ void getOpponentLine(const char line[], OpponentStats &opponent) {
     }
 }
 
+int readFirstNumberFromLine(const char line[]) {
+    int i = 0;
+    while (line[i] != '\0' && (line[i] < '0' || line[i] > '9')) {
+        i++;
+    }
+    int number = 0;
+    while (line[i] >= '0' && line[i] <= '9') {
+        number = number * 10 + (line[i] - '0');
+        i++;
+    }
+    return number;
+}
+
 bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[], int &opponentCount) {
     char fileName[MAX_USER_PASS_LEN];
     getProfileFileName(username, fileName);
@@ -345,22 +358,16 @@ bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[],
 
     file.getline(line, MAX_USER_PASS_LEN); // Username
     file.getline(line, MAX_USER_PASS_LEN); // Total games played
-    sscanf(line, "Total games played: %d", &s.gamesPlayed);
+    s.gamesPlayed = readFirstNumberFromLine(line);
 
     file.getline(line, MAX_USER_PASS_LEN); // Total games won
-    sscanf(line, "Total games won: %d", &s.gamesWon);
+    s.gamesWon = readFirstNumberFromLine(line);
 
     file.getline(line, MAX_USER_PASS_LEN); // "Games against other players..."
 
     opponentCount = 0;
     while (file.getline(line, MAX_USER_PASS_LEN)) {
-        sscanf(
-            line,
-            "%[^:]: %d games played (%d",
-            opponents[opponentCount].name,
-            &opponents[opponentCount].gamesPlayed,
-            &opponents[opponentCount].gamesWon
-        );
+        getOpponentLine(line, opponents[opponentCount]);
         opponentCount++;
     }
 

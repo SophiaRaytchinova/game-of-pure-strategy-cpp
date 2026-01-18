@@ -401,19 +401,12 @@ bool saveFullProfile(const char username[], const Stats &s, OpponentStats oppone
 
     file << "Username: " << username << endl;
     file << "Total games played: " << s.gamesPlayed << endl;
-    file << "Total games won: " << s.gamesWon
-         << " (" << winPercent << "%)" << endl;
+    file << "Total games won: " << s.gamesWon << " (" << winPercent << "%)" << endl;
     file << "Games against other players (wins/%):" << endl;
 
     for (int i = 0; i < opponentCount; i++) {
-        double p = (opponents[i].gamesPlayed > 0)
-            ? (opponents[i].gamesWon * 100.0 / opponents[i].gamesPlayed)
-            : 0.0;
-
-        file << opponents[i].name << ": "
-             << opponents[i].gamesPlayed << " games played ("
-             << opponents[i].gamesWon << "/" << p << "% wins)"
-             << endl;
+        double p = (opponents[i].gamesPlayed > 0) ? (opponents[i].gamesWon * 100.0 / opponents[i].gamesPlayed) : 0.0;
+        file << opponents[i].name << ": " << opponents[i].gamesPlayed << " games played (" << opponents[i].gamesWon << "/" << p << "% wins)" << endl;
     }
 
     file.close();

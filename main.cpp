@@ -276,13 +276,11 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
         "A", "2", "3", "4", "5", "6", "7", 
         "8", "9", "10", "J", "Q", "K"
     };
-
-    shuffleDeck(deck);
-
     char hand1[HAND_SIZE][MAX_CARD_LENGTH];
     char hand2[HAND_SIZE][MAX_CARD_LENGTH];
     initializeHands(hand1, hand2, deck);
-    
+    shuffleDeck(deck);
+
     int score1 = 0, score2 = 0, accumulatedRewardPoints = 0;
     char rewards1[DECK_SIZE][MAX_CARD_LENGTH];
     char rewards2[DECK_SIZE][MAX_CARD_LENGTH];

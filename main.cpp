@@ -649,6 +649,13 @@ void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN])
         cout << "-----------------------------------------------" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
+
+        if (!(cin >> choice)) {
+            cin.clear();
+            cin.ignore(MAX_USER_PASS_LEN, '\n');
+            continue;
+        }
+
         cin.ignore(MAX_USER_PASS_LEN, '\n');
         if (choice == 1) {
             playGame(player1, player2);

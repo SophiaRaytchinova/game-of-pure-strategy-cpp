@@ -163,7 +163,13 @@ bool isValidCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
 }
 
 // --FUNCTIONS FOR GAMEPLAY--
-void playerTurn(const char username[MAX_USER_PASS_LEN], char hand[HAND_SIZE][MAX_CARD_LENGTH], char rewards[DECK_SIZE][MAX_CARD_LENGTH], int rewardsCount, char chosenCard[MAX_CARD_LENGTH]) {
+void playerTurn(
+    const char username[MAX_USER_PASS_LEN], 
+    char hand[HAND_SIZE][MAX_CARD_LENGTH], 
+    char rewards[DECK_SIZE][MAX_CARD_LENGTH], 
+    int rewardsCount, 
+    char chosenCard[MAX_CARD_LENGTH]
+) {
     cout << "\n" << username << "'s turn\n";
     cout << "Your hand: ";
     printHand(hand);
@@ -177,6 +183,10 @@ void playerTurn(const char username[MAX_USER_PASS_LEN], char hand[HAND_SIZE][MAX
     while (true) {
         cout << "Choose a card: ";
         cin.getline(chosenCard, MAX_CARD_LENGTH);
+        if (isStrEmpty(chosenCard)) {
+            cout << "You must enter a card! Try again. \n";
+            continue;
+        }
         if (isValidCard(hand, chosenCard)) break;
         cout << "Invalid card. Try again. \n";
     }

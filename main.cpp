@@ -791,16 +791,9 @@ void runGame() {
         }  
         else if (menuChoice == 4) {
             cout << endl;
-            // if (isStrEmpty(username1) || isStrEmpty(username2)) {
-            //     cout << "Error! Both players must be logged in to start the game!" << endl;
-            //     cout << "Current player1: " << (isStrEmpty(username1) ? "[Not logged in]" : "OK") << endl;
-            //     cout << "Current player2: " << (isStrEmpty(username2) ? "[Not logged in]" : "OK") << endl;
-            // }
-            // else {
-                cout << "Entering game lobby..." << endl;
-                cout << endl;
-                loginMenu(username1, username2);
-            //}
+            cout << "Entering game lobby..." << endl;
+            cout << endl;
+            loginMenu(username1, username2);
         }
         else if (menuChoice == 5) {
             cout << "Exiting program. Goodbye!" << endl;

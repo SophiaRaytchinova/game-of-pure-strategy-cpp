@@ -639,12 +639,15 @@ void showProfileStats(const char username[MAX_USER_PASS_LEN]) {
     cout << "\n----- PROFILE: " << username << " -----" << endl;
     cout << "Total games played: " << s.gamesPlayed << endl;
     cout << "Total games won: " << s.gamesWon << endl;
-    cout << "\n-- GAMES AGAINST OTHER PLAYERS --" << endl;
+    
     if (s.gamesPlayed > 0) {
+        cout << endl;
+        cout << "-- GAMES AGAINST OTHER PLAYERS --" << endl;
         cout << "Win rate: " << (s.gamesWon * 100.0 / s.gamesPlayed) << "%" << endl;
     }
 
     if (opponentCount > 0) {
+        cout << endl;
         cout << "--RECORDS AGAINST OPPONENTS--" << endl;
         for (int i = 0; i < opponentCount; i++) {
             cout << opponents[i].name << ": " << opponents[i].gamesPlayed << " games played, " 

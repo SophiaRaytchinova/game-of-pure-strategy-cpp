@@ -59,7 +59,6 @@ void waitAndClearScreen() {
 }
 
 // --FUNCTIONS FOR CHAR ARRAY--
-
 void trimStr(char str[MAX_CARD_LENGTH]) {
     int start = 0;
     while (str[start] == ' ') start++;
@@ -131,7 +130,6 @@ void swapCards(char* a, char* b) {
     b[i] = '\0';
 }
 
-//cardPoints function returns the points of a given card as an integer
 int cardPoints(const char card[MAX_CARD_LENGTH]) {
     if (areStrEqual(card, "A")) return ACE_POINTS;
     if (areStrEqual(card, "J")) return JACK_POINTS;
@@ -145,15 +143,13 @@ int cardPoints(const char card[MAX_CARD_LENGTH]) {
     return value;
 }
 
-//shuffleDeck function shuffles the deck of cards
 void shuffleDeck(char deck[DECK_SIZE][MAX_CARD_LENGTH]) {
-    for (size_t i = DECK_SIZE - 1; i > 0; i--) { //Fisher-Yates shuffle algorithm
+    for (size_t i = DECK_SIZE - 1; i > 0; i--) { //using the Fisher-Yates shuffle algorithm
         int randomIndex = rand() % (i + 1);
         swapCards(deck[i], deck[randomIndex]);
     }
 }
 
-//printHand function prints the cards you have in that moment
 void printHand(char hand[HAND_SIZE][MAX_CARD_LENGTH]) {
     for (size_t i = 0; i < HAND_SIZE; i++) {
         if (!isStrEmpty(hand[i])) cout << hand[i] << " ";
@@ -162,20 +158,31 @@ void printHand(char hand[HAND_SIZE][MAX_CARD_LENGTH]) {
 }
 
 bool removeCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
-    // find the card in hand and remove it
     for (int i = 0; i < HAND_SIZE; i++) {
         if (areStrEqual(hand[i], card)) {
-            strCpy(hand[i], ""); // mark as used
+            strCpy(hand[i], ""); //mark as used card
             return true;
         }
     }
-    return false; // card not found
+    return false;
 }
 
 bool isValidCard(char hand[HAND_SIZE][MAX_CARD_LENGTH], const char card[]) {
-    for (int i = 0; i < HAND_SIZE; i++)
+    for (int i = 0; i < HAND_SIZE; i++) {
         if (areStrEqual(hand[i], card)) return true;
+    }
     return false;
+}
+
+void initializeHands (
+    char hand1[HAND_SIZE][MAX_CARD_LENGTH], 
+    char hand2[HAND_SIZE][MAX_CARD_LENGTH], 
+    char deck[DECK_SIZE][MAX_CARD_LENGTH]
+) {
+    for (int i = 0; i< HAND_SIZE; i++) {
+        strCpy(hand1[i], deck[i]);
+        strCpy(hand2[i], deck[i]);
+    }
 }
 
 // --FUNCTIONS FOR GAMEPLAY--
@@ -209,17 +216,6 @@ void playerTurn(
     }
 }
 
-void initializeHands (
-    char hand1[HAND_SIZE][MAX_CARD_LENGTH], 
-    char hand2[HAND_SIZE][MAX_CARD_LENGTH], 
-    char deck[DECK_SIZE][MAX_CARD_LENGTH]
-) {
-    for (int i = 0; i< HAND_SIZE; i++) {
-        strCpy(hand1[i], deck[i]);
-        strCpy(hand2[i], deck[i]);
-    }
-}
-
 bool playRound(
     int roundIndex,
     const char username1[MAX_USER_PASS_LEN],
@@ -229,7 +225,6 @@ bool playRound(
     char deck[DECK_SIZE][MAX_CARD_LENGTH],
     int &score1,
     int &score2,
-    //int &accRewardPoints,
     char rewards1[DECK_SIZE][MAX_CARD_LENGTH],
     char rewards2[DECK_SIZE][MAX_CARD_LENGTH],
     int &rewardsCount1,
@@ -237,30 +232,27 @@ bool playRound(
     int &accumulatedRewardCount,
     char accumulatedRewards[DECK_SIZE][MAX_CARD_LENGTH]
 ) {
-    cout << "\nReward card for this round: " << deck[roundIndex] << endl;
-
-    if (accumulatedRewardCount > 0) {
-    cout << "\nCurrent reward cards on the table: ";
-    for (int i = 0; i < accumulatedRewardCount; i++)
-        cout << accumulatedRewards[i] << " ";
-        cout << endl;
-    }
-
     char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
-    // ----- PLAYER 1 TURN -----
-    
+
+    cout << "\nReward card for this round: " << deck[roundIndex] << endl;
+    if (accumulatedRewardCount > 0) {
+        cout << "\nCurrent reward cards on the table: ";
+        for (int i = 0; i < accumulatedRewardCount; i++) {
+            cout << accumulatedRewards[i] << " ";
+            cout << endl;
+        }
+    }
     playerTurn(username1, hand1, rewards1, rewardsCount1, cardChosenByP1);
     removeCard(hand1, cardChosenByP1);
     waitAndClearScreen();
 
-    // ----- PLAYER 2 TURN -----
     cout << "\nReward card for this round: " << deck[roundIndex] << endl;
-
     if (accumulatedRewardCount > 0) {
-    cout << "\nCurrent reward cards on the table: ";
-    for (int i = 0; i < accumulatedRewardCount; i++)
-        cout << accumulatedRewards[i] << " ";
-        cout << endl;
+        cout << "\nCurrent reward cards on the table: ";
+        for (int i = 0; i < accumulatedRewardCount; i++) {
+            cout << accumulatedRewards[i] << " ";
+            cout << endl;
+        }
     }
     playerTurn(username2, hand2, rewards2, rewardsCount2, cardChosenByP2);
     removeCard(hand2, cardChosenByP2);
@@ -293,7 +285,6 @@ bool playRound(
         return true;
     }
     else {
-        //strCpy(accumulatedRewards[accumulatedRewardCount++], deck[roundIndex]);
         cout << "Tie! Reward card remains.\n";
         return false;
     }
@@ -332,16 +323,14 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
     };
     char hand1[HAND_SIZE][MAX_CARD_LENGTH];
     char hand2[HAND_SIZE][MAX_CARD_LENGTH];
+
     initializeHands(hand1, hand2, deck);
     shuffleDeck(deck);
 
     int score1 = 0, score2 = 0;
-
     char rewards1[DECK_SIZE][MAX_CARD_LENGTH];
     char rewards2[DECK_SIZE][MAX_CARD_LENGTH];
     int rewardsCount1 = 0, rewardsCount2 = 0;
-
-    //int accumulatedRewardPoints = 0;
     int accumulatedRewardCount = 0;
     char accumulatedRewards[DECK_SIZE][MAX_CARD_LENGTH];
 
@@ -353,7 +342,6 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
             hand1, hand2,
             deck,
             score1, score2,
-            //accumulatedRewardPoints,
             rewards1, rewards2,
             rewardsCount1, rewardsCount2,
             accumulatedRewardCount, accumulatedRewards
@@ -418,14 +406,14 @@ bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[],
 
     char line[MAX_USER_PASS_LEN];
 
-    file.getline(line, MAX_USER_PASS_LEN); // Username
-    file.getline(line, MAX_USER_PASS_LEN); // Total games played
+    file.getline(line, MAX_USER_PASS_LEN); //username
+    file.getline(line, MAX_USER_PASS_LEN); //total games played
     s.gamesPlayed = readFirstNumberFromLine(line);
 
-    file.getline(line, MAX_USER_PASS_LEN); // Total games won
+    file.getline(line, MAX_USER_PASS_LEN); //total games won
     s.gamesWon = readFirstNumberFromLine(line);
 
-    file.getline(line, MAX_USER_PASS_LEN); // "Games against other players..."
+    file.getline(line, MAX_USER_PASS_LEN); //games against other players
 
     opponentCount = 0;
     while (file.getline(line, MAX_USER_PASS_LEN)) {
@@ -479,25 +467,24 @@ bool userExists(const char logUsername[MAX_USER_PASS_LEN], const char logPasswor
     if (isStrEmpty(logUsername)) return false;
 
     std::ifstream user;
-    user.open("users.txt"); //opens file
-    if (!user.is_open()) return false; //checks if the file is open
+    user.open("users.txt");
+    if (!user.is_open()) return false;
 
     char username[MAX_USER_PASS_LEN], password[MAX_USER_PASS_LEN];
 
-    while (user >> username >> password) { //reads the file with users and passwords line by line
+    while (user >> username >> password) {
         if (areStrEqual(username, logUsername)) {
             if (areStrEqual(password, logPassword)) {   
-            user.close();
-            return true; // user found
+                user.close();
+                return true;
             }
         }
     }
 
     user.close();
-    return false; //user not found
+    return false;
 }
 
-//validRegisterData function checks if the username and password provided during registration are valid
 bool validData(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]){
     if (isStrEmpty(newUsername) || isStrEmpty(newPassword)) {
         cout << "Username and password cannot be empty!" << endl;
@@ -510,7 +497,6 @@ bool validData(const char newUsername[MAX_USER_PASS_LEN], const char newPassword
     return true;
 }
 
-//registerUser function registers a new user by adding their username and password to the users.txt file and creates a profile file for them
 bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]) {
     if (userExists(newUsername, newPassword)) {
         cout << "User already exists!" << endl;
@@ -521,16 +507,15 @@ bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassw
         return false;
     }
 
-    //append new user to user.txt
     std::ofstream users;
-    users.open("users.txt", std::ios::app); //opens file in append mode, so we can add content without removing its current content
+    users.open("users.txt", std::ios::app);
     
-    if (!users.is_open()) { //checks if file is open
+    if (!users.is_open()) {
         cout << "Error opening user.txt file!" << endl;
         return false;
     }
 
-    users << newUsername << " " << newPassword << endl; //writes username and password in users.txt
+    users << newUsername << " " << newPassword << endl;
     users.close();
 
     return createProfileFile(newUsername);
@@ -548,7 +533,6 @@ void getProfileFileName(const char username[MAX_USER_PASS_LEN], char fileName[MA
     fileName[i] = '\0';
 }
 
-//createProfileFile function creates a profile file for the new user
 bool createProfileFile(const char username[MAX_USER_PASS_LEN]) {
     char profileFile[MAX_USER_PASS_LEN];
     getProfileFileName(username, profileFile);
@@ -579,7 +563,6 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
     userFile.open("users.txt");
 
     if (!userFile.is_open()) {
-        //cout << "Error opening users.txt file! File might not exist." << endl;
         return false;
     }
 
@@ -587,24 +570,25 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
     while (userFile >> fileUsername >> filePassword) {
         if (areStrEqual(fileUsername, logUsername) && areStrEqual(filePassword, logPassword)) {
             userFile.close();
-            return true; // login successful
+            return true;
         }
     }
 
     userFile.close();
-    return false; // login failed
+    return false;
 }
 
 void printMainMenu() {
-    cout << "===== CARD GAME MENU =====" << endl;
-    cout << "1. Register" << endl;
-    cout << "2. Login" << endl;
-    cout << "3. Exit" << endl;
+    cout << "------- CARD GAME MENU -------" << endl;
+    cout << "        1. Register" << endl;
+    cout << "          2. Login" << endl;
+    cout << "          3. Exit" << endl;
+    cout << "------------------------------" << endl;
     cout << "Enter your choice: ";
 }
 
 int main() {
-    srand(time(0)); // seed random number generator
+    srand(time(0));
 
     int menuChoice;
     char username1[MAX_USER_PASS_LEN];
@@ -623,13 +607,11 @@ int main() {
             cout << endl;
             continue;
         }
-        cin.ignore(); // clear newline left in buffer
+        cin.ignore();
 
         if (menuChoice == 1) {
-            // Registration
             cout << "Enter new username: ";
             cin.getline(username1, MAX_USER_PASS_LEN);
-
             cout << "Enter new password: ";
             cin.getline(password1, MAX_USER_PASS_LEN);
 
@@ -640,10 +622,8 @@ int main() {
             }
         }
         else if (menuChoice == 2) {
-            // Login player1
             cout << "Player 1 -> Enter username: ";
             cin.getline(username1, MAX_USER_PASS_LEN);
-
             cout << "Player 1 -> Enter password: ";
             cin.getline(password1, MAX_USER_PASS_LEN);
 
@@ -651,9 +631,9 @@ int main() {
                 cout << "Login failed for player1. Check username/password. " << endl;
                 continue;
             } 
+
             cout << "Player 2 -> Enter username: ";
             cin.getline(username2, MAX_USER_PASS_LEN);
-
             cout << "Player 2 -> Enter password: ";
             cin.getline(password2, MAX_USER_PASS_LEN);
 
@@ -674,9 +654,7 @@ int main() {
         else {
             cout << "Invalid choice. Try again." << endl;
         }
-
         cout << endl;
     }
-
     return 0;
 }

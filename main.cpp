@@ -677,7 +677,15 @@ void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN])
 
         cin.ignore(MAX_USER_PASS_LEN, '\n');
         if (choice == 1) {
-            playGame(player1, player2);
+            cout << endl;
+            if (isStrEmpty(player1) || isStrEmpty(player2)) {
+                cout << "Error! Both players must be logged in to start the game!" << endl;
+                cout << endl;
+                cout << "Current player1: " << (isStrEmpty(player1) ? "[Not logged in]" : "OK") << endl;
+                cout << "Current player2: " << (isStrEmpty(player2) ? "[Not logged in]" : "OK") << endl;
+                cout << endl;
+            }
+            else playGame(player1, player2);
         } 
         if (choice == 2) {
             showProfileStats(player1);
@@ -783,17 +791,16 @@ void runGame() {
         }  
         else if (menuChoice == 4) {
             cout << endl;
-            if (isStrEmpty(username1) || isStrEmpty(username2)) {
-                cout << "Error! Both players must be logged in to start the game!" << endl;
-                cout << "Current player1: " << (isStrEmpty(username1) ? "[Not logged in]" : "OK") << endl;
-                cout << "Current player2: " << (isStrEmpty(username2) ? "[Not logged in]" : "OK") << endl;
-                //continue;
-            }
-            else {
+            // if (isStrEmpty(username1) || isStrEmpty(username2)) {
+            //     cout << "Error! Both players must be logged in to start the game!" << endl;
+            //     cout << "Current player1: " << (isStrEmpty(username1) ? "[Not logged in]" : "OK") << endl;
+            //     cout << "Current player2: " << (isStrEmpty(username2) ? "[Not logged in]" : "OK") << endl;
+            // }
+            // else {
                 cout << "Entering game lobby..." << endl;
                 cout << endl;
                 loginMenu(username1, username2);
-            }
+            //}
         }
         else if (menuChoice == 5) {
             cout << "Exiting program. Goodbye!" << endl;

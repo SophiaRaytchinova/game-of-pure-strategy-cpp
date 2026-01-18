@@ -640,9 +640,11 @@ void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN])
         cout << "Logged in as: " << player1 << " and " << player2 << endl;
         cout << "------------- PURE STRATEGY LOBBY -------------" << endl;
         cout << "                1. Start game" << endl;
-        cout << " 2. Log out from user1 and return to main menu" << endl;
-        cout << " 3. Log out from user2 and return to main menu" << endl;
-        cout << "                4. Exit game" << endl;
+        cout << "      2. View player 1 statistics" << endl;
+        cout << "      3. View player 2 statistics" << endl;
+        cout << " 4. Log out from user1 and return to main menu" << endl;
+        cout << " 5. Log out from user2 and return to main menu" << endl;
+        cout << "                6. Exit game" << endl;
         cout << "-----------------------------------------------" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
@@ -650,17 +652,25 @@ void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN])
         if (choice == 1) {
             playGame(player1, player2);
         } 
-        else if (choice == 2) {
+        if (choice == 2) {
+            showProfileStats(player1);
+            waitAndClearScreen();
+        }
+        else if (choice == 3) {
+            showProfileStats(player2);
+            waitAndClearScreen();
+        }
+        else if (choice == 4) {
             strCpy(player1, "");
             cout << "Player1 logged out and returning to main menu..." << endl;
             break;
         }
-        else if (choice == 3) {
+        else if (choice == 5) {
             strCpy(player2, "");
             cout << "Player2 logged out and returning to main menu..." << endl;
             break;
         } 
-        else if (choice == 4) {
+        else if (choice == 6) {
             cout << "Exiting program. Goodbye!" << endl;
             break;
         }

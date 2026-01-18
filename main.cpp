@@ -325,7 +325,6 @@ bool playRound(
     }
     else {
         cout << "Tie! Reward card remains.\n";
-        //if ( i == DECK_SIZE - 1 ) cout << "No cards left. Final tie cards are discarded.\n";
         return false;
     }
 }
@@ -503,8 +502,8 @@ bool saveFullProfile(const char username[], const Stats &s, OpponentStats oppone
     file << "Games against other players (wins/%):" << endl;
 
     for (int i = 0; i < opponentCount; i++) {
-        double p = (opponents[i].gamesPlayed > 0) ? (opponents[i].gamesWon * 100.0 / opponents[i].gamesPlayed) : 0.0;
-        file << opponents[i].name << ": " << opponents[i].gamesPlayed << " games played (" << opponents[i].gamesWon << "/" << p << "% wins)" << endl;
+        double percent = (opponents[i].gamesPlayed > 0) ? (opponents[i].gamesWon * 100.0 / opponents[i].gamesPlayed) : 0.0;
+        file << opponents[i].name << ": " << opponents[i].gamesPlayed << " games played (" << opponents[i].gamesWon << "/" << percent << "% wins)" << endl;
     }
 
     file.close();
@@ -615,7 +614,7 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
     return false;
 }
 
-// --FUNCTIONS FOR USING IN MAIN--
+// --FUNCTIONS TO USE IN MAIN--
 void printStartMenu() {
     cout << "------- PURE STRATEGY MENU -------" << endl;
     cout << "       1. Register new user" << endl;

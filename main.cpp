@@ -106,13 +106,18 @@ bool validData(const char newUsername[MAX_USER_PASS_LEN], const char newPassword
 void trimStr(char str[MAX_CARD_LENGTH]) {
     int start = 0;
     while (str[start] == ' ') start++;
+
     int end = 0;
     while (str[end] != '\0') end++;
     end--;
 
-    while (end >= start && str[end] == ' ') end--;
+    if (end < start) {
+        str[0] = '\0';
+        return;
+    }
+
     int j = 0;
-    for (int i = start; i < end; i++) {
+    for (int i = start; i <= end; i++) {
         str[j++] = str[i];
     }
     str[j] = '\0';
@@ -621,23 +626,13 @@ void loginMenu(const char player1[MAX_USER_PASS_LEN], const char player2[MAX_USE
     int choice;
     while (true) {
         cout << "Logged in as: " << player1 << " and " << player2 << endl;
-        cout << endl;
         cout << "------- PURE STRATEGY LOBBY -------" << endl;
         cout << "          1. Start game" << endl;
         cout << " 2. Log out and return to main menu" << endl;
         cout << "           3. Exit game" << endl;
-        cout << "------------------------------" << endl;
+        cout << "-----------------------------------" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
-
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(MAX_USER_PASS_LEN, '\n');
-            cout << "Invalid choice. Try again." << endl;
-            cout << endl;
-            continue;
-        }
-        cin.ignore();
 
         if (choice == 1) {
             playGame(player1, player2);

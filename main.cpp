@@ -9,7 +9,7 @@
 * @idnumber 5MI0600681
 * @compiler Visual Studio
 *
-* <main.cpp>
+* <Main game logic, profile management and menu system>
 *
 */
 
@@ -17,10 +17,11 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
-using std::cin;
-using std::cout;
-using std::endl;
+using std::cin; //ask
+using std::cout; //ask
+using std::endl; //ask
 
+const int SCREEN_HEIGHT = 30; //for size of console clear
 const int MAX_OPPONENTS = 50; //so we can track stats against max 50 different opponents
 const int MAX_USER_PASS_LEN = 1024;
 const int DECK_SIZE = 13; //number of different cards in the deck (A, 2, 3, 4, 5, 6, 7, 8, 9 , 10, J, Q, K)
@@ -49,13 +50,38 @@ bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[],
 bool saveFullProfile(const char username[], const Stats &s, OpponentStats opponents[], int opponentCount);
 void updateOpponent(OpponentStats opponents[], int &count, const char opponentName[], bool won);
 
+// --HELPER FUNCTIONS--
 void waitAndClearScreen() {
     cout << "\nPress ENTER to continue...";
     cin.ignore(MAX_USER_PASS_LEN, '\n');
-
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < SCREEN_HEIGHT; i++) {
         cout << endl;
     }
+}
+
+int readFirstNumberFromLine(const char line[]) {
+    int i = 0;
+    while (line[i] != '\0' && (line[i] < '0' || line[i] > '9')) {
+        i++;
+    }
+    int number = 0;
+    while (line[i] >= '0' && line[i] <= '9') {
+        number = number * 10 + (line[i] - '0');
+        i++;
+    }
+    return number;
+}
+
+bool validData(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]){
+    if (isStrEmpty(newUsername) || isStrEmpty(newPassword)) {
+        cout << "Username and password cannot be empty!" << endl;
+        return false;
+    }
+    if (containsSpace(newUsername) || containsSpace(newPassword)) {
+        cout << "Username and password cannot contain spaces!" << endl;
+        return false;
+    }
+    return true;
 }
 
 // --FUNCTIONS FOR CHAR ARRAY--
@@ -384,19 +410,6 @@ void getOpponentLine(const char line[], OpponentStats &opponent) {
     }
 }
 
-int readFirstNumberFromLine(const char line[]) {
-    int i = 0;
-    while (line[i] != '\0' && (line[i] < '0' || line[i] > '9')) {
-        i++;
-    }
-    int number = 0;
-    while (line[i] >= '0' && line[i] <= '9') {
-        number = number * 10 + (line[i] - '0');
-        i++;
-    }
-    return number;
-}
-
 bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[], int &opponentCount) {
     char fileName[MAX_USER_PASS_LEN];
     getProfileFileName(username, fileName);
@@ -485,18 +498,6 @@ bool userExists(const char logUsername[MAX_USER_PASS_LEN], const char logPasswor
     return false;
 }
 
-bool validData(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]){
-    if (isStrEmpty(newUsername) || isStrEmpty(newPassword)) {
-        cout << "Username and password cannot be empty!" << endl;
-        return false;
-    }
-    if (containsSpace(newUsername) || containsSpace(newPassword)) {
-        cout << "Username and password cannot contain spaces!" << endl;
-        return false;
-    }
-    return true;
-}
-
 bool registerUser(const char newUsername[MAX_USER_PASS_LEN], const char newPassword[MAX_USER_PASS_LEN]) {
     if (userExists(newUsername, newPassword)) {
         cout << "User already exists!" << endl;
@@ -578,6 +579,7 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
     return false;
 }
 
+// --FUNCTIONS FOR USING IN MAIN--
 void printMainMenu() {
     cout << "------- CARD GAME MENU -------" << endl;
     cout << "        1. Register" << endl;
@@ -587,18 +589,13 @@ void printMainMenu() {
     cout << "Enter your choice: ";
 }
 
-int main() {
-    srand(time(0));
-
+void runGame() {
     int menuChoice;
-    char username1[MAX_USER_PASS_LEN];
-    char password1[MAX_USER_PASS_LEN];
-    char username2[MAX_USER_PASS_LEN];
-    char password2[MAX_USER_PASS_LEN];
+    char username1[MAX_USER_PASS_LEN], password1[MAX_USER_PASS_LEN];
+    char username2[MAX_USER_PASS_LEN], password2[MAX_USER_PASS_LEN];
 
     while (true) {
         printMainMenu();
-
         cin >> menuChoice;
         if (cin.fail()) {
             cin.clear();
@@ -656,5 +653,10 @@ int main() {
         }
         cout << endl;
     }
+}
+
+int main() {
+    srand(time(0));
+    runGame();
     return 0;
 }

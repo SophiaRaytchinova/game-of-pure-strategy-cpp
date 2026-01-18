@@ -59,6 +59,22 @@ void waitAndClearScreen() {
 }
 
 // --FUNCTIONS FOR CHAR ARRAY--
+
+void trimStr(char str[MAX_CARD_LENGTH]) {
+    int start = 0;
+    while (str[start] == ' ') start++;
+    int end = 0;
+    while (str[end] != '\0') end++;
+    end--;
+
+    while (end >= start && str[end] == ' ') end--;
+    int j = 0;
+    for (int i = start; i < end; i++) {
+        str[j++] = str[i];
+    }
+    str[j] = '\0';
+}
+
 void strCpy(char* dest, const char* src) {
     int i = 0;
     while (src[i] != '\0') { 
@@ -183,6 +199,7 @@ void playerTurn(
     while (true) {
         cout << "Choose a card: ";
         cin.getline(chosenCard, MAX_CARD_LENGTH);
+        trimStr(chosenCard);
         if (isStrEmpty(chosenCard)) {
             cout << "You must enter a card! Try again. \n";
             continue;

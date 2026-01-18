@@ -606,6 +606,34 @@ void printStartMenu() {
     cout << "Enter your choice: ";
 }
 
+void showProfileStats(const char username[MAX_USER_PASS_LEN]) {
+    Stats s;
+    OpponentStats opponents[MAX_OPPONENTS];
+    int opponentCount = 0;
+
+    if (!loadFullProfile(username, s, opponents, opponentCount)) {
+        cout << "Error loading profile for " << username << "!" << endl;
+        return;
+    }
+
+    cout << "\n----- PROFILE: " << username << " -----" << endl;
+    cout << "Total games played: " << s.gamesPlayed << endl;
+    cout << "Total games won: " << s.gamesWon << endl;
+    cout << "\nGames against other players:" << endl;
+    if (s.gamesPlayed > 0) {
+        cout << "Win rate: " << (s.gamesWon * 100.0 / s.gamesPlayed) << "%" << endl;
+    }
+
+    if (opponentCount > 0) {
+        cout << "--RECORDS AGAINST OPPONENTS--" << endl;
+        for (int i = 0; i < opponentCount; i++) {
+            cout << opponents[i].name << ": " << opponents[i].gamesPlayed << " games played, " 
+                 << opponents[i].gamesWon << " wins";
+        }
+    }
+    cout << "----------------------------------" << endl;
+}
+
 void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN]) {
     int choice;
     while (true) {

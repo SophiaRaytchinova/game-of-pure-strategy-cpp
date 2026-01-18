@@ -394,6 +394,26 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
 
     bool player1Won = score1 > score2;
     bool player2Won = score2 > score1;
+    if (player1Won) {
+        cout << username1 << " wins the game!" << endl;
+    } 
+    else if (player2Won) {
+        cout << username2 << " wins the game!" << endl;
+    }
+    else {
+        cout << "The game ends in a tie! Checking number of cards won..." << endl;
+        if (rewardsCount1 > rewardsCount2) {
+            cout << username1 << " wins the game by number of cards won!" << endl;
+            player1Won = true;
+        }
+        else if (rewardsCount2 > rewardsCount1) {
+            cout << username2 << " wins the game by number of cards won!" << endl;
+            player2Won = true;
+        }
+        else {
+            cout << "The game is a complete tie! No winner this time." << endl;
+        }
+    }
 
     updateStatsAfterGame(username1, username2, player1Won, player2Won);
 

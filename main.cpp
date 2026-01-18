@@ -9,7 +9,7 @@
 * @idnumber 5MI0600681
 * @compiler Visual Studio
 *
-* <Main game logic, profile management and menu system>
+* <Main file containing the implementation of the "Pure strategy" card game logic, profile management and menu system>
 *
 */
 
@@ -17,9 +17,9 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
-using std::cin; //ask
-using std::cout; //ask
-using std::endl; //ask
+using std::cin;
+using std::cout;
+using std::endl;
 
 const int SCREEN_HEIGHT = 30; //for size of console clear
 const int MAX_OPPONENTS = 50; //so we can track stats against max 50 different opponents
@@ -49,6 +49,8 @@ void getProfileFileName(const char username[MAX_USER_PASS_LEN], char fileName[MA
 bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[], int &opponentCount);
 bool saveFullProfile(const char username[], const Stats &s, OpponentStats opponents[], int opponentCount);
 void updateOpponent(OpponentStats opponents[], int &count, const char opponentName[], bool won);
+bool containsSpace(const char* s);
+bool isStrEmpty(const char* s);
 
 // --HELPER FUNCTIONS--
 void waitAndClearScreen() {
@@ -82,6 +84,22 @@ bool validData(const char newUsername[MAX_USER_PASS_LEN], const char newPassword
         return false;
     }
     return true;
+}
+
+bool isUsernameTaken(const char newUsername[MAX_USER_PASS_LEN]) {
+    std::ifstream user;
+    user.open("users.txt");
+    if (!user.is_open()) return false;
+
+    char fileUsername[MAX_USER_PASS_LEN], filePassword[MAX_USER_PASS_LEN];
+    while (user >> fileUsername >> filePassword) {
+        if (areStrEqual(fileUsername, newUsername)) {
+            user.close();
+            return true;
+        }
+    }
+    user.close();
+    return false;
 }
 
 // --FUNCTIONS FOR CHAR ARRAY--
@@ -312,6 +330,7 @@ bool playRound(
     }
     else {
         cout << "Tie! Reward card remains.\n";
+        //if ( i == DECK_SIZE - 1 ) cout << "No cards left. Final tie cards are discarded.\n";
         return false;
     }
 }

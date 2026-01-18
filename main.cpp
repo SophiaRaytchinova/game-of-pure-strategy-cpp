@@ -415,9 +415,10 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
     }
 
     updateStatsAfterGame(username1, username2, player1Won, player2Won);
-
+    cout << endl;
     cout << "GAME OVER!" << endl;
     cout<< "Press ENTER to return to main menu...";
+    cout << endl;
     cin.ignore(MAX_USER_PASS_LEN, '\n');
 }
 

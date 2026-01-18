@@ -193,7 +193,7 @@ void initializeHands (
     }
 }
 
-void playRound(
+bool playRound(
     int roundIndex,
     const char username1[MAX_USER_PASS_LEN],
     const char username2[MAX_USER_PASS_LEN],
@@ -202,21 +202,38 @@ void playRound(
     char deck[DECK_SIZE][MAX_CARD_LENGTH],
     int &score1,
     int &score2,
-    int &accRewards,
+    int &accRewardPoints,
     char rewards1[DECK_SIZE][MAX_CARD_LENGTH],
     char rewards2[DECK_SIZE][MAX_CARD_LENGTH],
     int &rewardsCount1,
-    int &rewardsCount2
+    int &rewardsCount2,
+    int &accumulatedRewardCount,
+    char accumulatedRewards[DECK_SIZE][MAX_CARD_LENGTH]
 ) {
-    cout << "\nReward card: " << deck[roundIndex] << endl;
-    accRewards += cardPoints(deck[roundIndex]);
+    cout << "\nReward card for this round: " << deck[roundIndex] << endl;
+    //accRewardPoints += cardPoints(deck[roundIndex]);
+
+    if (accumulatedRewardCount > 0) {
+    cout << "\nCurrent reward cards on the table: ";
+    for (int i = 0; i < accumulatedRewardCount; i++)
+        cout << accumulatedRewards[i] << " ";
+        cout << endl;
+    }
 
     char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
     // ----- PLAYER 1 TURN -----
+    
     playerTurn(username1, hand1, rewards1, rewardsCount1, cardChosenByP1);
     waitAndClearScreen();
 
     // ----- PLAYER 2 TURN -----
+    cout << "\nReward card: " << deck[roundIndex];
+    if (accumulatedRewardCount > 0) {
+    cout << "\nCurrent reward cards from previous ties: ";
+    for (int i = 0; i < accumulatedRewardCount; i++)
+        cout << accumulatedRewards[i] << " ";
+        cout << endl;
+    }
     playerTurn(username2, hand2, rewards2, rewardsCount2, cardChosenByP2);
     waitAndClearScreen();
 
@@ -230,19 +247,40 @@ void playRound(
     cout << username2 << " played: " << cardChosenByP2 << " ("  << pointsOfChosenCardByP2 << " points)" << endl;
 
     if (pointsOfChosenCardByP1 > pointsOfChosenCardByP2) { 
-        score1 += accRewards; 
-        strCpy(rewards1[rewardsCount1++], deck[roundIndex]);
-        accRewards = 0;
-        cout << username1 << " wins the reward!"; 
+        strCpy(accumulatedRewards[accumulatedRewardCount++], deck[roundIndex]);
+
+        for (int i = 0; i < accumulatedRewardCount; i++) {
+            strCpy(rewards1[rewardsCount1++], accumulatedRewards[i]);
+            score1 += cardPoints(accumulatedRewards[i]);
+        }
+        
+        accumulatedRewardCount = 0;
+        cout << username1 << " wins all the reward cards this round!\n"; 
+        return true;
     }
     else if (pointsOfChosenCardByP2 > pointsOfChosenCardByP1) { 
-        score2 += accRewards; 
-        strCpy(rewards2[rewardsCount2++], deck[roundIndex]);
-        accRewards = 0;
-        cout << username2 << " wins the reward!"; 
+        strCpy(accumulatedRewards[accumulatedRewardCount++], deck[roundIndex]);
+        
+        for (int i = 0; i < accumulatedRewardCount; i++) {
+            strCpy(rewards2[rewardsCount2++], accumulatedRewards[i]);
+            score2 += cardPoints(accumulatedRewards[i]);
+        }
+        //strCpy(rewards2[rewardsCount2++], deck[roundIndex]);
+        //accRewardPoints = 0;
+        accumulatedRewardCount = 0;
+        cout << username2 << " wins all the reward cards this round!\n"; 
+        //waitAndClearScreen();
+        return true;
     }
-    else cout << "Tie! Reward card remains.\n";
-
+    else {
+        
+        strCpy(accumulatedRewards[accumulatedRewardCount++], deck[roundIndex]);
+        cout << "Tie! Reward card remains.\n";
+        //accRewardPoints += cardPoints(deck[roundIndex]);
+        
+        //waitAndClearScreen();
+        return false;
+    }
 }
 
 void updateStatsAfterGame(
@@ -281,25 +319,32 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
     initializeHands(hand1, hand2, deck);
     shuffleDeck(deck);
 
-    int score1 = 0, score2 = 0, accumulatedRewardPoints = 0;
+    int score1 = 0, score2 = 0;
+
     char rewards1[DECK_SIZE][MAX_CARD_LENGTH];
     char rewards2[DECK_SIZE][MAX_CARD_LENGTH];
     int rewardsCount1 = 0, rewardsCount2 = 0;
 
-    for (int j = 0; j < HAND_SIZE; j++) {
-        playRound(
-            j,
+    int accumulatedRewardPoints = 0;
+    int accumulatedRewardCount = 0;
+    char accumulatedRewards[DECK_SIZE][MAX_CARD_LENGTH];
+
+    int roundIndex = 0;
+    while (roundIndex < HAND_SIZE) {
+        bool roundHadWinner = playRound(
+            roundIndex,
             username1, username2,
             hand1, hand2,
             deck,
             score1, score2,
             accumulatedRewardPoints,
             rewards1, rewards2,
-            rewardsCount1, rewardsCount2
+            rewardsCount1, rewardsCount2,
+            accumulatedRewardCount, accumulatedRewards
         );
+        roundIndex++;
     }
-
-    cout << "\nFinal Scores: ";
+    cout << "\nFinal Scores: " << endl;
     cout << username1 << ": " << score1 << endl;
     cout << username2 << ": " << score2 << endl;
 
@@ -307,6 +352,8 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
     bool player2Won = score2 > score1;
 
     updateStatsAfterGame(username1, username2, player1Won, player2Won);
+    cout << "Game over! Press ENTER to return to main menu...";
+    cin.ignore(MAX_USER_PASS_LEN, '\n');
 }
 
 // --FUNCTIONS FOR PROFILES--

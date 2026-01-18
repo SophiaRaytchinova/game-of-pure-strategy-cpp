@@ -599,13 +599,51 @@ bool loginUser(const char logUsername[MAX_USER_PASS_LEN], const char logPassword
 }
 
 // --FUNCTIONS FOR USING IN MAIN--
-void printMainMenu() {
-    cout << "------- CARD GAME MENU -------" << endl;
-    cout << "        1. Register" << endl;
-    cout << "          2. Login" << endl;
-    cout << "          3. Exit" << endl;
+void printStartMenu() {
+    cout << "------- PURE STRATEGY MENU -------" << endl;
+    cout << "       1. Register new user" << endl;
+    cout << "        2. Login and play" << endl;
+    cout << "          3. Exit game" << endl;
     cout << "------------------------------" << endl;
     cout << "Enter your choice: ";
+}
+
+void loginMenu(const char player1[MAX_USER_PASS_LEN], const char player2[MAX_USER_PASS_LEN]) {
+    int choice;
+    while (true) {
+        cout << "------- PURE STRATEGY LOBBY -------" << endl;
+        cout << "Logged in as: " << player1 << " and " << player2 << endl;
+        cout << "          1. Start game" << endl;
+        cout << " 2. Logout and return to main menu" << endl;
+        cout << "           3. Exit game" << endl;
+        cout << "------------------------------" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(MAX_USER_PASS_LEN, '\n');
+            cout << "Invalid choice. Try again." << endl;
+            cout << endl;
+            continue;
+        }
+        cin.ignore();
+
+        if (choice == 1) {
+            playGame(player1, player2);
+        } 
+        else if (choice == 2) {
+            cout << "Logging out and returning to main menu..." << endl;
+            break;
+        } 
+        else if (choice == 3) {
+            cout << "Exiting program. Goodbye!" << endl;
+            break;
+        }
+        else {
+            cout << "Invalid choice. Try again." << endl;
+        }
+    }
 }
 
 void runGame() {
@@ -614,7 +652,7 @@ void runGame() {
     char username2[MAX_USER_PASS_LEN], password2[MAX_USER_PASS_LEN];
 
     while (true) {
-        printMainMenu();
+        printStartMenu();
         cin >> menuChoice;
         if (cin.fail()) {
             cin.clear();
@@ -661,7 +699,7 @@ void runGame() {
             cout << "Both players logged in successfully! Starting game! " << endl;
             
             waitAndClearScreen();
-            playGame(username1, username2);
+            loginMenu(username1, username2);
         }
         else if (menuChoice == 3) {
             cout << "Exiting program. Goodbye!" << endl;

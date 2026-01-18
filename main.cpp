@@ -312,6 +312,28 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
 }
 
 // --FUNCTIONS FOR PROFILES--
+void getOpponentLine(const char line[], OpponentStats &opponent) {
+    int i = 0, j = 0;
+
+    while (line[i] != ':' && line[i] != '\0') {
+        opponent.name[j++] = line[i++];
+    }
+    opponent.name[j] = '\0';
+    i += 2;
+    opponent.gamesPlayed = 0;
+    while (line[i] >= '0' && line[i] <= '9') {
+        opponent.gamesPlayed = opponent.gamesPlayed * 10 + (line[i] - '0');
+        i++;
+    }
+    while (line[i] != '(' && line[i] != '\0') i++;
+    i++;
+    opponent.gamesWon = 0;
+    while (line[i] >= '0' && line[i] <= '9') {
+        opponent.gamesWon = opponent.gamesWon * 10 + (line[i] - '0');
+        i++;
+    }
+}
+
 bool loadFullProfile(const char username[], Stats &s, OpponentStats opponents[], int &opponentCount) {
     char fileName[MAX_USER_PASS_LEN];
     getProfileFileName(username, fileName);

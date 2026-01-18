@@ -272,8 +272,8 @@ bool playRound(
     char accumulatedRewards[DECK_SIZE][MAX_CARD_LENGTH]
 ) {
     char cardChosenByP1[MAX_CARD_LENGTH], cardChosenByP2[MAX_CARD_LENGTH];
-
-    cout << "\nReward card for this round: " << deck[roundIndex] << endl;
+    waitAndClearScreen();
+    cout << "\nReward card for this round: " << deck[roundIndex]; //<< endl
     if (accumulatedRewardCount > 0) {
         cout << "\nCurrent reward cards on the table: ";
         for (int i = 0; i < accumulatedRewardCount; i++) {
@@ -397,7 +397,8 @@ void playGame (const char username1[MAX_USER_PASS_LEN], const char username2[MAX
 
     updateStatsAfterGame(username1, username2, player1Won, player2Won);
 
-    cout << "Game over! Press ENTER to return to main menu...";
+    cout << "GAME OVER!" << endl;
+    cout<< "Press ENTER to return to main menu...";
     cin.ignore(MAX_USER_PASS_LEN, '\n');
 }
 
@@ -619,7 +620,7 @@ void showProfileStats(const char username[MAX_USER_PASS_LEN]) {
     cout << "\n----- PROFILE: " << username << " -----" << endl;
     cout << "Total games played: " << s.gamesPlayed << endl;
     cout << "Total games won: " << s.gamesWon << endl;
-    cout << "\nGames against other players:" << endl;
+    cout << "\n-- GAMES AGAINST OTHER PLAYERS --" << endl;
     if (s.gamesPlayed > 0) {
         cout << "Win rate: " << (s.gamesWon * 100.0 / s.gamesPlayed) << "%" << endl;
     }
@@ -628,10 +629,10 @@ void showProfileStats(const char username[MAX_USER_PASS_LEN]) {
         cout << "--RECORDS AGAINST OPPONENTS--" << endl;
         for (int i = 0; i < opponentCount; i++) {
             cout << opponents[i].name << ": " << opponents[i].gamesPlayed << " games played, " 
-                 << opponents[i].gamesWon << " wins";
+                 << opponents[i].gamesWon << " wins" << endl;
         }
     }
-    cout << "----------------------------------" << endl;
+    cout << "-----------------------" << endl;
 }
 
 void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN]) {
@@ -640,11 +641,11 @@ void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN])
         cout << "Logged in as: " << player1 << " and " << player2 << endl;
         cout << "------------- PURE STRATEGY LOBBY -------------" << endl;
         cout << "                1. Start game" << endl;
-        cout << "      2. View player 1 statistics" << endl;
-        cout << "      3. View player 2 statistics" << endl;
-        cout << " 4. Log out from user1 and return to main menu" << endl;
-        cout << " 5. Log out from user2 and return to main menu" << endl;
-        cout << "                6. Exit game" << endl;
+        cout << "         2. View player 1 statistics" << endl;
+        cout << "         3. View player 2 statistics" << endl;
+        cout << " 4. Log out from player 1 and return to main menu" << endl;
+        cout << " 5. Log out from player 2 and return to main menu" << endl;
+        cout << "                 6. Exit lobby" << endl;
         cout << "-----------------------------------------------" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
@@ -671,7 +672,7 @@ void loginMenu(char player1[MAX_USER_PASS_LEN], char player2[MAX_USER_PASS_LEN])
             break;
         } 
         else if (choice == 6) {
-            cout << "Exiting program. Goodbye!" << endl;
+            cout << "Exiting lobby. Goodbye!" << endl;
             break;
         }
         else {

@@ -1,0 +1,8 @@
+*.exe
+*.out
+PureStrategy
+
+.DS_Store
+
+users.txt
+*.txt
